@@ -15,25 +15,14 @@ class Chart {
 
     static template(settings) {
         return ` 
- <div class="chart">
- <svg height=${settings.height} width=${settings.width}>
+        <div class="chart">
+            <svg height=${settings.height} width=${settings.width}>
    
-    <polyline points="${settings.axisY0}" 
-
-  style="fill:${settings.fill};stroke:${settings.colors.y0};stroke-width:${settings.strokeWidth}" />
-    <polyline points="${settings.axisY1}" 
-
-  style="fill:${settings.fill};stroke:${settings.colors.y1};stroke-width:${settings.strokeWidth}" />
-    <polyline points="${settings.axisY2}" 
-  
-  style="fill:${settings.fill};stroke:${settings.colors.y0};stroke-width:${settings.strokeWidth}" />
-    <polyline points="${settings.axisY3}" 
-  
-  style="fill:${settings.fill};stroke:${settings.colors.y1};stroke-width:${settings.strokeWidth}" />
-  
-</svg>
-</div>
-`;
+                  <polyline points="${settings.axis}" 
+                       style="fill:${settings.fill};stroke:${settings.colors.y0};stroke-width:${settings.strokeWidth}" />
+                       
+            </svg>
+        </div>`;
     }
 
     static getDefaultsettings() {
@@ -46,10 +35,7 @@ class Chart {
             width: '100%',
             height: '500',
             fill: 'transparent',
-            axisY0: '',
-            axisY1: '',
-            axisY2: '',
-            axisY3: '',
+            axis:'',
             types: {"y0": "line", "y1": "line", "x": "x"},
             names: {"y0": "#0", "y1": "#1"},
             colors: {"y0": "#3DC23F", "y1": "#F34C44"},
@@ -63,46 +49,65 @@ class Chart {
 
 
 
+const getScale=(data)=>{
+    let ctn = data.columns[0].length;
+    let maxX = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).width);
+    let maxY = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).height);
+   return {scaleX:parseFloat( (maxX/ctn).toFixed(4) ),scaleY: parseFloat( (maxY/ctn).toFixed(4) ) };
+};
+
+const getExtremum=(dataY)=>{
+    let ctn = dataY.length;
+    let copyDataY=dataY.slice();
+    let extr= copyDataY.sort((a,b)=>{return b-a;})[0];
+    return parseFloat((extr/ctn).toFixed(4));
+};
 
 const makeChart=(data)=>{
-    let points={Y0:'',Y1:'',Y2:'',Y3:''};
+    let points={};
 
     let axis = 1;
     let ctn = data.columns[0].length;
-    let x=0;
+
+    let oneYear=31557600000;
+    let oneDay=86400000;
+
+    let scales=getScale(data);
+    let scaleX=scales.scaleX;
+    let scaleY='';
+
+    let x='0';
+    let  y='0';
 
     while (axis < ctn) {
 
+        let year= data.columns[0][axis]/oneYear^0;
+        let day =(data.columns[0][axis]-year*oneYear)/oneDay^0;
 
-        let year = data.columns[0][axis]/31557600000^0;
-        let day=((data.columns[0][axis]-year*31557600000)/86400000^0);
+        x = parseFloat( ((0 * day + axis) * scaleX).toFixed(4) );
 
-        let y0 = data.columns[1][axis];
-        let y1 = data.columns[2][axis];
+        for (let i = 1; i < data.columns.length; i++) {
+            scaleY = parseFloat( ( scales.scaleY / getExtremum(data.columns[i]) ).toFixed(4) );
 
-        points.Y0+=`${(x*day+axis)*5},${y0*0.01} `;
-        points.Y1+=`${(x*day+axis)*5},${y1*0.01} `;
+            y = parseFloat((data.columns[i][axis] * scaleY).toFixed(4));
+
+            points[`Y${i}`] += `${x},${y} `;
+        }
 
         axis++;
     }
 
 
+   for(let poin in points){
+        console.log(points[poin]);
+   }
+
     return new Chart({
-        axisY0: points.Y0,
-        axisY1: points.Y1,
-        axisY2: points.Y2,
-        axisY3: points.Y3
+        axis: points,
     }).init();
 };
 
-data.forEach(item=>{
-    makeChart(item);
-});
+makeChart(data[0]);
 
 
-
-
-
-
-//todo Найти максимумы для осей с помощью сотрировки и привязать этот максимум к размеру экрана
 
