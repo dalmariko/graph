@@ -13,13 +13,26 @@ class Chart {
         document.querySelector(settings.chartsContainer).insertAdjacentHTML('beforeend', template);
     }
 
+    static makePolilines(settings){
+      let polilines='';
+      let points='';
+
+        for(let i=0;i<settings.gprapiks;i++) {
+                polilines+=
+                    `<polyline points="${settings.axis[`Y${i}`]}"
+                     style="fill:${settings.fill};stroke:${settings.colors.y0};stroke-width:${settings.strokeWidth}" /> \n\n`
+      }
+      return polilines;
+    }
+
     static template(settings) {
+        let charts = Chart.makePolilines(settings);
+
         return ` 
         <div class="chart">
             <svg height=${settings.height} width=${settings.width}>
    
-                  <polyline points="${settings.axis}" 
-                       style="fill:${settings.fill};stroke:${settings.colors.y0};stroke-width:${settings.strokeWidth}" />
+              ${charts}
                        
             </svg>
         </div>`;
@@ -53,14 +66,14 @@ const getScale=(data)=>{
     let ctn = data.columns[0].length;
     let maxX = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).width);
     let maxY = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).height);
-   return {scaleX:parseFloat( (maxX/ctn).toFixed(4) ),scaleY: parseFloat( (maxY/ctn).toFixed(4) ) };
+   return {scaleX:maxX/ctn,scaleY:maxY/ctn};
 };
 
 const getExtremum=(dataY)=>{
     let ctn = dataY.length;
     let copyDataY=dataY.slice();
     let extr= copyDataY.sort((a,b)=>{return b-a;})[0];
-    return parseFloat((extr/ctn).toFixed(4));
+    return extr/ctn;
 };
 
 const makeChart=(data)=>{
@@ -81,29 +94,30 @@ const makeChart=(data)=>{
 
     while (axis < ctn) {
 
-        let year= data.columns[0][axis]/oneYear^0;
-        let day =(data.columns[0][axis]-year*oneYear)/oneDay^0;
+        // let year= data.columns[0][axis]/oneYear^0;
+        // let day =(data.columns[0][axis]-year*oneYear)/oneDay^0;
 
-        x = parseFloat( ((0 * day + axis) * scaleX).toFixed(4) );
+        // x = parseFloat( ((0 * day + axis) * scaleX).toFixed(4) );
 
-        for (let i = 1; i < data.columns.length; i++) {
-            scaleY = parseFloat( ( scales.scaleY / getExtremum(data.columns[i]) ).toFixed(4) );
+            x = parseFloat((axis * scaleX).toFixed(4));
 
-            y = parseFloat((data.columns[i][axis] * scaleY).toFixed(4));
+            for (let i = 1; i < data.columns.length; i++) {
+                scaleY = scales.scaleY / getExtremum(data.columns[i]);
 
-            points[`Y${i}`] += `${x},${y} `;
-        }
+                y = parseFloat((data.columns[i][axis] * scaleY).toFixed(4));
 
-        axis++;
+                points[`Y${i-1}`] += `${x},${y} `;
+            }
+
+            axis++;
     }
 
+console.log(points)
 
-   for(let poin in points){
-        console.log(points[poin]);
-   }
 
     return new Chart({
         axis: points,
+        gprapiks:Object.keys(points).length,
     }).init();
 };
 
