@@ -15,12 +15,17 @@ class Chart {
 
     static makePolilines(settings){
       let polilines='';
-      let points='';
+        let points='';
+
+        let color=[];
+        for(let key in settings.colors){
+            color.push(settings.colors[key]);
+        };
 
         for(let i=0;i<settings.gprapiks;i++) {
                 polilines+=
                     `<polyline points="${settings.axis[`Y${i}`]}"
-                     style="fill:${settings.fill};stroke:${settings.colors.y0};stroke-width:${settings.strokeWidth}" /> \n\n`
+                     style="fill:${settings.fill};stroke:${color[i]};stroke-width:${settings.strokeWidth}" /> \n\n`
       }
       return polilines;
     }
@@ -51,8 +56,13 @@ class Chart {
             axis:'',
             types: {"y0": "line", "y1": "line", "x": "x"},
             names: {"y0": "#0", "y1": "#1"},
-            colors: {"y0": "#3DC23F", "y1": "#F34C44"},
-            strokeWidth: 4,
+            colors: {
+                "axisY0":"#cb513a",
+                "axisY1":"#73c03a",
+                "y2":"#65b9ac",
+                "y3":"#4682b4"
+            },
+            strokeWidth: 1,
         }
     }
 }
@@ -107,13 +117,23 @@ const makeChart=(data)=>{
                 points[`Y${i-1}`]+=`${x},${y} `;
             }
             axis++;
-        }
+        };
 
-    return new Chart({
-        axis: points,
-        gprapiks:Object.keys(points).length,
-    }).init();
+    let charParameter={};
+
+    for (let props in data) {
+        if (props !== 'columns') {
+            charParameter[props] = data[props];
+            charParameter['axis'] = points;
+            charParameter['gprapiks'] = Object.keys(points).length;
+        }
+    }
+
+    return new Chart(charParameter).init();
+
 };
+
+
 
 data.forEach(item=>{
     makeChart(item);
