@@ -35,7 +35,8 @@ class Chart {
 
         return ` 
         <div class="chart">
-            <svg height=${settings.height} width=${settings.width}>
+            <!--<svg  height=${settings.height} width=${settings.width} viewBox="0 0 ${100} ${100}">-->
+            <svg  height=${settings.height} width=${settings.width} >
    
               ${charts}
                        
@@ -51,7 +52,7 @@ class Chart {
         return {
             chartsContainer: '.manyCharts',
             width: '100%',
-            height: '500',
+            height: '100',
             fill: 'transparent',
             axis:'',
             types: {"y0": "line", "y1": "line", "x": "x"},
