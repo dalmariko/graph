@@ -70,7 +70,7 @@ class Chart {
                 "y2": "#65b9ac",
                 "y3": "#4682b4"
             },
-            strokeWidth: 1,
+            strokeWidth: 2,
         }
     }
 }
