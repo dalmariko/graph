@@ -35,12 +35,13 @@ class Chart {
 
         return ` 
         <div class="chart">
-            <!--<svg  height=${settings.height} width=${settings.width} viewBox="0 0 ${100} ${100}">-->
-            <svg  height=${settings.height} width=${settings.width} >
-   
+            <svg width='${settings.width}' height='${settings.height}'
+              viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}"
+               preserveAspectRatio="none"
+                >
               ${charts}
-                       
             </svg>
+            
         </div>`;
     }
 
@@ -52,7 +53,7 @@ class Chart {
         return {
             chartsContainer: '.manyCharts',
             width: '100%',
-            height: '100',
+            height: '100%',
             fill: 'transparent',
             axis:'',
             types: {"y0": "line", "y1": "line", "x": "x"},
@@ -74,10 +75,28 @@ class Chart {
 
 
 const getScale=(data)=>{
+
     let ctn = data.columns[0].length;
-    let maxX = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).width);
-    let maxY = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).height);
-   return {scaleX:maxX/ctn,scaleY:maxY/ctn};
+
+    // let maxX = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).width);
+    // let maxY = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).height);
+
+    // отвечают за размеры экрана
+
+    // let maxX = window.screen.width;
+    // let maxY = window.screen.height;
+
+    // отвечают за размер окна браузера
+
+    let maxX = window.innerWidth;
+    let maxY = window.innerHeight;
+
+    //отвечают за непосредственный размер области отвечающей за вывод информации (очень полезно в мобильных браузерах)
+
+    // let maxX = window.screen.availWidth;
+    // let maxY = window.screen.availHeight;
+
+    return {scaleX:maxX/ctn,scaleY:maxY/ctn};
 };
 
 const getExtremum=(dataY)=>{
@@ -93,32 +112,26 @@ const makeChart=(data)=>{
     let axis = 1;
     let ctn = data.columns[0].length;
 
-
-    let oneYear=31557600000;
-    let oneDay=86400000;
-
     let scales=getScale(data);
     let scaleX=scales.scaleX;
     let scaleY='';
     let x=0;
     let y=0;
 
-    while (axis < ctn) {
-        // let year= data.columns[0][axis]/oneYear^0;
-        // let day =(data.columns[0][axis]-year*oneYear)/oneDay^0;
-        // x = parseFloat( ((0 * day + axis) * scaleX).toFixed(4) );
 
-        x = parseFloat(( (axis) * scaleX).toFixed(4));
+    while (axis < ctn) {
+
+        x = parseFloat( ( axis *scaleX).toFixed(4) );
 
             for (let i = 1; i < data.columns.length; i++) {
 
-                scaleY = scales.scaleY / getExtremum(data.columns[i]);
+                scaleY =  scales.scaleY / getExtremum(data.columns[i]);
                 y = parseFloat((data.columns[i][axis] * scaleY).toFixed(4));
 
                 points[`Y${i-1}`]+=`${x},${y} `;
             }
             axis++;
-        };
+        }
 
     let charParameter={};
 
@@ -127,6 +140,8 @@ const makeChart=(data)=>{
             charParameter[props] = data[props];
             charParameter['axis'] = points;
             charParameter['gprapiks'] = Object.keys(points).length;
+            charParameter['innerWidth'] = window.innerWidth;
+            charParameter['innerHeigth'] = window.innerHeight;
         }
     }
 
