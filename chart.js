@@ -15,7 +15,6 @@ class Chart {
 
     static makePolilines(settings) {
         let polilines = '';
-        let points = '';
 
         let color = [];
         for (let key in settings.colors) {
@@ -25,7 +24,7 @@ class Chart {
         for (let i = 0; i < settings.gprapiks; i++) {
             polilines +=
                 `<polyline points="${settings.axis[`Y${i}`]}"
-                     style="fill:${settings.fill};stroke:${color[i]};stroke-width:${settings.strokeWidth}" /> \n\n`
+                     style="fill:${settings.fill};stroke:${color[i]};stroke-width:${settings.strokeWidth}" />`
         }
         return polilines;
     }
@@ -47,7 +46,6 @@ class Chart {
             <svg width='${settings.widthMini}' height='${settings.heightMini}'
               viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none"
              vector-effect="non-scaling-stroke" >
-               
               ${charts}
             </svg>
             
