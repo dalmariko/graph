@@ -36,13 +36,18 @@ class Chart {
         return ` 
         <div class="chart">
         
+        <!--500 это область показа, 780  это settings.innerWidth - 500-->
+        
             <svg width='${settings.widthBig}' height='${settings.heightBig}'
-              viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" >
+              viewBox="780 0 ${'500'} ${settings.innerHeigth}" preserveAspectRatio="none" 
+              vector-effect="non-scaling-stroke" >
               ${charts}
             </svg>
             
             <svg width='${settings.widthMini}' height='${settings.heightMini}'
-              viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" >
+              viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none"
+             vector-effect="non-scaling-stroke" >
+               
               ${charts}
             </svg>
             
@@ -92,7 +97,7 @@ const getScale = (data) => {
 
     let maxX = window.innerWidth;
     let maxY = window.innerHeight;
-
+console.log(maxX,maxY);
     //отвечают за непосредственный размер области отвечающей за вывод информации (очень полезно в мобильных браузерах)
 
     // let maxX = window.screen.availWidth;
