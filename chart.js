@@ -60,9 +60,9 @@ class Chart {
         return {
             chartsContainer: '.manyCharts',
             widthBig: '100%',
-            heightBig: '255',
+            heightBig: '200',
             widthMini: '100%',
-            heightMini: '85',
+            heightMini: '50',
             fill: 'transparent',
             axis: '',
             types: {"y0": "line", "y1": "line", "x": "x"},
@@ -88,30 +88,34 @@ const getScale = (data) => {
     return {scaleX: maxX / ctn, scaleY: maxY / ctn};
 };
 const getExtremum = (data) => {
-    return ( (data.slice().sort((a, b) => {
-        return b - a;
-    })[0]) / data.length );
+    return ( (data.slice().filter(Number).sort((a, b) => (a<b) - (a>b) )[0]) / data.length );
 };
-const makePoint = (data, scale, {property = true} = {}) => {
+const round=(number)=>{
+    return  Math.round((number * 100).toFixed(2)) / 100;
+};
+const makePoint = (data, scale, {type = true} = {}) => {
     let rez = [];
     let item = 1;
     let ctn = data.length;
+
     while (item !== ctn) {
-        rez[item - 1] = ( parseFloat(( (property ? data[item] : item) * scale).toFixed(4)) );
+        rez[item - 1] =  round(type ? data[item] : item)  * scale   ;
         item++;
     }
+
     return rez;
 };
 const makeChart = (data) => {
     let points = {};
     let scales = getScale(data);
     let scaleX = scales.scaleX;
-    let x = makePoint(data.columns[0], scaleX, {property: false});
+    let x = makePoint(data.columns[0], scaleX, {type: false});
     let ctn = x.length;
     let a = 1;
     let actn = data.columns.length;
     while (a !== actn) {
         let scaleY = scales.scaleY / getExtremum(data.columns[a]);
+
         let y = makePoint(data.columns[a], scaleY);
         let str = '';
         let i = 0;
