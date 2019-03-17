@@ -23,7 +23,7 @@ class Chart {
 
         for (let i = 0; i < settings.gprapiks; i++) {
             polilines +=
-                `<polyline points="${settings.axis[`Y${i}`]}"
+                `<polyline points="${settings.axis[`y${i}`]}"
                      style="fill:${settings.fill};stroke:${color[i]};stroke-width:${settings.strokeWidth}" />`
         }
         return polilines;
@@ -73,7 +73,7 @@ class Chart {
                 "y2": "#65b9ac",
                 "y3": "#4682b4"
             },
-            strokeWidth: 2,
+            strokeWidth: 1,
         }
     }
 }
@@ -95,7 +95,7 @@ const getScale = (data) => {
 
     let maxX = window.innerWidth;
     let maxY = window.innerHeight;
-console.log(maxX,maxY);
+// console.log(maxX,maxY);
     //отвечают за непосредственный размер области отвечающей за вывод информации (очень полезно в мобильных браузерах)
 
     // let maxX = window.screen.availWidth;
@@ -113,32 +113,44 @@ const getExtremum = (dataY) => {
     return extr / ctn;
 };
 
-const makeChart = (data) => {
-    let points = {Y0: '', Y1: '', Y2: '', Y3: ''};
 
-    let axis = 1;
-    let ctn = data.columns[0].length;
+const makePoint = (data, scale, {property = true} = {}) => {
+    let rez = [];
+    let item = 1;
+    let method = property ? data[item] : item;
+    for (item; item < data.length; item++) {
+        let point = parseFloat(method * scale).toFixed(4);
+        rez.push(point);
+    }
+    return rez;
+};
+
+
+const makeChart = (data) => {
+    let points = {y0: '', y1: '', y2: '', y3: ''};
+
 
     let scales = getScale(data);
     let scaleX = scales.scaleX;
     let scaleY = '';
-    let x = 0;
-    let y = 0;
+    let x = '';
+    let y = '';
 
 
-    while (axis < ctn) {
+    x = makePoint(data.columns[0], scaleX, {property: false});
 
-        x = parseFloat(( axis * scaleX).toFixed(4));
+    for (let i = 1; i < data.columns.length; i++) {
 
-        for (let i = 1; i < data.columns.length; i++) {
+        scaleY = scales.scaleY / getExtremum(data.columns[i]);
 
-            scaleY = scales.scaleY / getExtremum(data.columns[i]);
-            y = parseFloat((data.columns[i][axis] * scaleY).toFixed(4));
+        y = makePoint(data.columns[i], scaleY);
 
-            points[`Y${i - 1}`] += `${x},${y} `;
-        }
-        axis++;
+
+        // points[`${data.columns[i][0]}`] += `${x},${y} `;
     }
+
+
+// console.log(points);
 
     let charParameter = {};
 
@@ -156,10 +168,11 @@ const makeChart = (data) => {
 
 };
 
+makeChart(data[0]);
 
-data.forEach(item => {
-    makeChart(item);
-});
+// data.forEach(item => {
+//     makeChart(item);
+// });
 
 
 
