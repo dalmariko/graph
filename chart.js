@@ -78,7 +78,6 @@ class Chart {
     }
 }
 
-
 const getScale = (data) => {
 
     let ctn = data.columns[0].length;
@@ -105,13 +104,9 @@ const makePoint = (data, scale, {property = true} = {}) => {
 };
 const makeChart = (data) => {
     let points = {};
-
     let scales = getScale(data);
-
     let scaleX = scales.scaleX;
-
     let x = makePoint(data.columns[0], scaleX, {property: false});
-
     let ctn = x.length;
     let a = 1;
     let actn = data.columns.length;
@@ -127,9 +122,7 @@ const makeChart = (data) => {
         points[data.columns[a][0]] = str;
         a++;
     }
-
     let charParameter = {};
-
     for (let props in data) {
         if (props !== 'columns') {
             charParameter[props] = data[props];
@@ -139,7 +132,6 @@ const makeChart = (data) => {
             charParameter['innerHeigth'] = window.innerHeight;
         }
     }
-
     return new Chart(charParameter).init();
 
 };
@@ -147,6 +139,5 @@ const makeChart = (data) => {
 data.forEach(item => {
     makeChart(item);
 });
-
 
 
