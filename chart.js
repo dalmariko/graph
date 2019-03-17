@@ -60,7 +60,7 @@ class Chart {
         return {
             chartsContainer: '.manyCharts',
             widthBig: '100%',
-            heightBig: '285',
+            heightBig: '255',
             widthMini: '100%',
             heightMini: '85',
             fill: 'transparent',
@@ -83,37 +83,22 @@ const getScale = (data) => {
 
     let ctn = data.columns[0].length;
 
-    // let maxX = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).width);
-    // let maxY = parseFloat(getComputedStyle(document.querySelector('.manyCharts')).height);
-
-    // отвечают за размеры экрана
-
-    // let maxX = window.screen.width;
-    // let maxY = window.screen.height;
-
-    // отвечают за размер окна браузера
-
-    // let maxX = window.innerWidth;
-    // let maxY = window.innerHeight;
-
-
-    //отвечают за непосредственный размер области отвечающей за вывод информации (очень полезно в мобильных браузерах)
-
-    let maxX = parseFloat([window.screen.availWidth, window.innerWidth, window.screen.width].reduce((p, c, _, a) => p + c / a.length, 0).toFixed(1));
-    let maxY = parseFloat([window.screen.availHeight, window.innerHeight, window.screen.height].reduce((p, c, _, a) => p + c / a.length, 0).toFixed(1));
+    let maxX = window.innerWidth;
+    let maxY = window.innerHeight;
 
     return {scaleX: maxX / ctn, scaleY: maxY / ctn};
 };
-
 const getExtremum = (data) => {
-    return data.slice().sort((a, b) => {return b - a;})[0]/ data.length;
+    return ( (data.slice().sort((a, b) => {
+        return b - a;
+    })[0]) / data.length );
 };
 const makePoint = (data, scale, {property = true} = {}) => {
     let rez = [];
     let item = 1;
     let ctn = data.length;
     while (item !== ctn) {
-        rez[item - 1] = ( parseFloat((property ? data[item] : item * scale).toFixed(4)) );
+        rez[item - 1] = ( parseFloat(( (property ? data[item] : item) * scale).toFixed(4)) );
         item++;
     }
     return rez;
@@ -128,22 +113,19 @@ const makeChart = (data) => {
     let x = makePoint(data.columns[0], scaleX, {property: false});
 
     let ctn = x.length;
-
-    for (let a = 1; a < data.columns.length; a++) {
-
+    let a = 1;
+    let actn = data.columns.length;
+    while (a !== actn) {
         let scaleY = scales.scaleY / getExtremum(data.columns[a]);
-
         let y = makePoint(data.columns[a], scaleY);
-
         let str = '';
         let i = 0;
-
         while (i !== ctn) {
             str += `${x[i]},${y[i]} `;
             i++;
         }
         points[data.columns[a][0]] = str;
-
+        a++;
     }
 
     let charParameter = {};
@@ -161,7 +143,6 @@ const makeChart = (data) => {
     return new Chart(charParameter).init();
 
 };
-
 
 data.forEach(item => {
     makeChart(item);
