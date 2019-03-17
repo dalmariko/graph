@@ -60,7 +60,7 @@ class Chart {
         return {
             chartsContainer: '.manyCharts',
             widthBig: '100%',
-            heightBig: '400',
+            heightBig: '285',
             widthMini: '100%',
             heightMini: '85',
             fill: 'transparent',
@@ -93,14 +93,16 @@ const getScale = (data) => {
 
     // отвечают за размер окна браузера
 
-    let maxX = window.innerWidth;
-    let maxY = window.innerHeight;
-// console.log(maxX,maxY);
+    // let maxX = window.innerWidth;
+    // let maxY = window.innerHeight;
+
+
     //отвечают за непосредственный размер области отвечающей за вывод информации (очень полезно в мобильных браузерах)
 
-    // let maxX = window.screen.availWidth;
-    // let maxY = window.screen.availHeight;
+    let maxX = parseFloat([window.screen.availWidth,window.innerWidth,window.screen.width].reduce((p,c,_,a)=>p+c/a.length,0).toFixed(1));
+    let maxY = parseFloat([window.screen.availHeight,window.innerHeight,window.screen.height].reduce((p,c,_,a)=>p+c/a.length,0).toFixed(1));
 
+    console.log(maxX,maxY);
     return {scaleX: maxX / ctn, scaleY: maxY / ctn};
 };
 
@@ -110,18 +112,18 @@ const getExtremum = (dataY) => {
     let extr = copyDataY.sort((a, b) => {
         return b - a;
     })[0];
-    console.log(extr , extr / ctn);
     return extr / ctn;
 };
 
 
 const makePoint = (data, scale, {property = true} = {}) => {
     let rez = [];
-
-    for (let item=1; item < data.length; item++) {
-        let point = parseFloat(property ? data[item] : item * scale).toFixed(4);
-        rez.push(point);
-    }
+    let item=1;
+let ctn=data.length;
+    while ( item !== ctn ) {
+        rez[item-1]=( parseFloat( (property ? data[item] : item * scale).toFixed(4) ) );
+        item++;
+}
     return rez;
 };
 
@@ -129,10 +131,9 @@ const makePoint = (data, scale, {property = true} = {}) => {
 const makeChart = (data) => {
     let points = {};
 
-
     let scales = getScale(data);
 
-    // console.log(scales);
+    console.log(scales);
 
     let scaleX = scales.scaleX;
     let scaleY = '';
