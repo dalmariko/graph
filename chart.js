@@ -110,16 +110,16 @@ const getExtremum = (dataY) => {
     let extr = copyDataY.sort((a, b) => {
         return b - a;
     })[0];
+    console.log(extr , extr / ctn);
     return extr / ctn;
 };
 
 
 const makePoint = (data, scale, {property = true} = {}) => {
     let rez = [];
-    let item = 1;
-    let method = property ? data[item] : item;
-    for (item; item < data.length; item++) {
-        let point = parseFloat(method * scale).toFixed(4);
+
+    for (let item=1; item < data.length; item++) {
+        let point = parseFloat(property ? data[item] : item * scale).toFixed(4);
         rez.push(point);
     }
     return rez;
@@ -127,10 +127,13 @@ const makePoint = (data, scale, {property = true} = {}) => {
 
 
 const makeChart = (data) => {
-    let points = {y0: '', y1: '', y2: '', y3: ''};
+    let points = {};
 
 
     let scales = getScale(data);
+
+    // console.log(scales);
+
     let scaleX = scales.scaleX;
     let scaleY = '';
     let x = '';
@@ -140,17 +143,20 @@ const makeChart = (data) => {
     x = makePoint(data.columns[0], scaleX, {property: false});
 
     for (let i = 1; i < data.columns.length; i++) {
+        points[data.columns[i][0]] = '';
 
         scaleY = scales.scaleY / getExtremum(data.columns[i]);
 
         y = makePoint(data.columns[i], scaleY);
 
+        let str='';
+            for(let i=0;i<x.length;i++){
+                str+=`${x[i]},${y[i]} `;
+            }
 
-        // points[`${data.columns[i][0]}`] += `${x},${y} `;
+        points[data.columns[i][0]]=str;
+
     }
-
-
-// console.log(points);
 
     let charParameter = {};
 
@@ -168,11 +174,10 @@ const makeChart = (data) => {
 
 };
 
-makeChart(data[0]);
 
-// data.forEach(item => {
-//     makeChart(item);
-// });
+data.forEach(item => {
+    makeChart(item);
+});
 
 
 
