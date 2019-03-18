@@ -24,7 +24,7 @@ class Chart {
         for (let i = 0; i < settings.gprapiks; i++) {
             polilines +=
                 `<polyline points="${settings.axis[`y${i}`]}"
-                     style="fill:${settings.fill};stroke:${color[i]};stroke-width:${settings.strokeWidth}" />`
+                     style="fill:${settings.fill};stroke:${color[i]};" />`
         }
         return polilines;
     }
@@ -34,21 +34,32 @@ class Chart {
 
         return ` 
         <div class="chart">
-        
-        <!--500 это область показа, 780  это settings.innerWidth - 500-->
-        
-            <svg width='${settings.widthBig}' height='${settings.heightBig}'
-              viewBox="780 0 ${'500'} ${settings.innerHeigth}" preserveAspectRatio="none" 
-              vector-effect="non-scaling-stroke" >
-              ${charts}
-            </svg>
-            
-            <svg width='${settings.widthMini}' height='${settings.heightMini}'
-              viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none"
-             vector-effect="non-scaling-stroke" >
-              ${charts}
-            </svg>
-            
+   <svg width='${settings.w}' height='${settings.hTopChar*1+settings.hbottomChar*1}'>
+        <style>
+            /*todo тут все цвета будут*/
+        </style>
+
+        <defs>
+            <!--/*todo тут будут все элементы поделенные по ID*/-->
+            <g id="polilineChars">
+                ${charts}
+            </g>
+
+        </defs>
+
+        <symbol id="topChar" width="${settings.wTopChar}" height="${settings.hTopChar}" x="0" y="0" viewBox="1080 0 ${200} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+            <use xlink:href="#polilineChars" stroke-width="${settings.strokeWidth}"/>
+        </symbol>
+
+        <symbol id="bottomChar" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  x="0" y="${settings.hTopChar}"
+        viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+            <use xlink:href="#polilineChars" stroke-width="${settings.strokeWidth*2}"/>
+        </symbol>
+
+       <use xlink:href="#topChar"/>
+       <use xlink:href="#bottomChar"/>
+
+    </svg>            
         </div>`;
     }
 
@@ -59,10 +70,11 @@ class Chart {
          */
         return {
             chartsContainer: '.manyCharts',
-            widthBig: '100%',
-            heightBig: '200',
-            widthMini: '100%',
-            heightMini: '50',
+            w:'100%',
+            wTopChar: '100%',
+            hTopChar: '300',
+            wbottomChar: '100%',
+            hbottomChar: '80',
             fill: 'transparent',
             axis: '',
             types: {"y0": "line", "y1": "line", "x": "x"},
@@ -70,7 +82,7 @@ class Chart {
             colors: {
                 "axisY0": "#cb513a",
                 "axisY1": "#73c03a",
-                "y2": "#65b9ac",
+                "y2": "#ff35e3",
                 "y3": "#4682b4"
             },
             strokeWidth: 1,
@@ -84,7 +96,7 @@ const getScale = (data) => {
 
     let maxX = window.innerWidth;
     let maxY = window.innerHeight;
-
+console.log('w =',maxX,' h =',maxY);
     return {scaleX: maxX / ctn, scaleY: maxY / ctn};
 };
 const getExtremum = (data) => {
@@ -140,8 +152,12 @@ const makeChart = (data) => {
 
 };
 
-data.forEach(item => {
-    makeChart(item);
-});
+// data.forEach(item => {
+//     makeChart(item);
+// });
+
+    makeChart(data[0]);
 
 
+ //todo Сделать ползунок на маленьком графике с размером 300px ширины и 100% высоты
+ //todo   где будет меняться ширина, добавить органы управления, навесить события на него
