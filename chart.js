@@ -37,19 +37,25 @@ class Chart {
    <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
         <style>
             /*todo тут все цвета будут*/
-            .progres{
-                fill: red;
-                fill-opacity: .3;
+            
+            .progresCovered{
+                fill: #F5F9FB;
+                fill-opacity: .7;
             }
             .area{
-                position: relative;
-                fill: #ffffff;
-                fill-opacity: .3;
+                fill: transparent;
+                fill-opacity: .3;               
+
+                stroke: #5dbbff; 
+                stroke-opacity: .5;
+                stroke-width: 21px;
             }
-            .areaBorder{
-                fill: #5dbbff;
-                fill-opacity: .3;
+            
+            .round{
+                stroke-width: 3px;
+                fill: #ffffffff;
             }
+            
         </style>
 
         <defs>
@@ -57,17 +63,21 @@ class Chart {
             <g id="polilineChars${settings.SVGindex}">
                 ${charts}
             </g>
+
             <g id="progressBar${settings.SVGindex}">
-                <rect class="progres" width="100%" height="100%" />
-                
-                <symbol id="progressDistrict${settings.SVGindex}" width="100%" height="100%" x="800">
-                    <rect class="area" width="200px" height="100%" />
-                    <rect class="areaBorder" width="10px" height="100%" x="200"/>
-                    <rect class="areaBorder" width="10px" height="100%" x="0"/>
+                                
+                <symbol id="progresDistrict${settings.SVGindex}" width="100%" height="100%" >
+                    <rect class="area" width="100%" height="100%"/>
                 </symbol>
-
-                <use xlink:href="#progressDistrict${settings.SVGindex}" width="100%" height="100%"/>
-
+                
+                <symbol id="progresHidden${settings.SVGindex}" width="100%" height="100%">
+                        <rect class="progresCovered" width="100%" height="100%" />
+                </symbol> 
+     
+                                
+                <use xlink:href="#progresDistrict${settings.SVGindex}" width="200" height="100%" x="800"/>
+                <use xlink:href="#progresHidden${settings.SVGindex}" width="800" height="100%" x="0"/>
+                <use xlink:href="#progresHidden${settings.SVGindex}" width="280" height="100%" x="1000"/>
             </g>
 
         </defs>
@@ -81,9 +91,12 @@ class Chart {
             <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth * 2}"/>
             <use xlink:href="#progressBar${settings.SVGindex}" />
         </symbol>
-
-       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
-       <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
+            
+                <circle class="round" r="7" stroke="green" cx="345" cy="110" fill="#ffffffff" />
+                <circle class="round" r="7" stroke="red" cx="345" cy="168" fill="#ffffffff" />
+                
+      <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
+      <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
 
     </svg>            
         </div>`;
@@ -201,9 +214,10 @@ const makeChart = (data,index) => {
 
 };
 
-data.forEach((item,index) => {
-    makeChart(item,index);
-});
+// data.forEach((item,index) => {
+//     makeChart(item,index);
+// });
+    makeChart(data[0],0);
 
 
 
