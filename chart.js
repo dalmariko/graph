@@ -41,23 +41,23 @@ class Chart {
 
         <defs>
             <!--/*todo тут будут все элементы поделенные по ID*/-->
-            <g id="polilineChars">
+            <g id="polilineChars${settings.SVGindex}">
                 ${charts}
             </g>
 
         </defs>
 
-        <symbol id="topChar" width="${settings.wTopChar}" height="${settings.hTopChar}" x="0" y="0" viewBox="1080 0 ${200} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
-            <use xlink:href="#polilineChars" stroke-width="${settings.strokeWidth}"/>
+        <symbol id="topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}" x="0" y="0" viewBox="1080 0 ${200} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+            <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth}"/>
         </symbol>
 
-        <symbol id="bottomChar" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  x="0" y="${settings.hTopChar}"
+        <symbol id="bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  x="0" y="${settings.hTopChar}"
         viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
-            <use xlink:href="#polilineChars" stroke-width="${settings.strokeWidth*2}"/>
+            <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth*2}"/>
         </symbol>
 
-       <use xlink:href="#topChar"/>
-       <use xlink:href="#bottomChar"/>
+       <use xlink:href="#topChar${settings.SVGindex}"/>
+       <use xlink:href="#bottomChar${settings.SVGindex}"/>
 
     </svg>            
         </div>`;
@@ -94,9 +94,31 @@ const getScale = (data) => {
 
     let ctn = data.columns[0].length;
 
+    // let maxX = window.innerWidth;
+    // let maxY = window.innerHeight;
+
     let maxX = window.innerWidth;
     let maxY = window.innerHeight;
-console.log('w =',maxX,' h =',maxY);
+
+    // let maxX = Math.max(
+    //     document.body.scrollWidth,
+    //     document.documentElement.scrollWidth,
+    //     document.body.offsetWidth,
+    //     document.documentElement.offsetWidth,
+    //     document.body.clientWidth,
+    //     document.documentElement.clientWidth
+    // );
+    //
+    // let maxY = Math.max(
+    //     document.body.scrollHeight,
+    //     document.documentElement.scrollHeight,
+    //     document.body.offsetHeight,
+    //     document.documentElement.offsetHeight,
+    //     document.body.clientHeight,
+    //     document.documentElement.clientHeight
+    // );
+
+    console.log('w =',maxX,' h =',maxY);
     return {scaleX: maxX / ctn, scaleY: maxY / ctn};
 };
 const getExtremum = (data) => {
@@ -117,7 +139,7 @@ const makePoint = (data, scale, {type = true} = {}) => {
 
     return rez;
 };
-const makeChart = (data) => {
+const makeChart = (data,index) => {
     let points = {};
     let scales = getScale(data);
     let scaleX = scales.scaleX;
@@ -143,6 +165,7 @@ const makeChart = (data) => {
         if (props !== 'columns') {
             charParameter[props] = data[props];
             charParameter['axis'] = points;
+            charParameter['SVGindex'] = index;
             charParameter['gprapiks'] = Object.keys(points).length;
             charParameter['innerWidth'] = window.innerWidth;
             charParameter['innerHeigth'] = window.innerHeight;
@@ -152,12 +175,36 @@ const makeChart = (data) => {
 
 };
 
-// data.forEach(item => {
-//     makeChart(item);
-// });
+data.forEach((item,index) => {
+    makeChart(item,index);
+});
+//     makeChart(data[0],0);
 
-    makeChart(data[0]);
 
 
- //todo Сделать ползунок на маленьком графике с размером 300px ширины и 100% высоты
- //todo   где будет меняться ширина, добавить органы управления, навесить события на него
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ // todo Сделать ползунок на маленьком графике с размером 300px ширины и 100% высоты
+ // todo где будет меняться ширина, добавить органы управления, навесить события на него
