@@ -34,15 +34,40 @@ class Chart {
 
         return ` 
         <div class="chart" data-id="${settings.SVGindex}">
-   <svg width='${settings.w}' height='${settings.hTopChar*1+settings.hbottomChar*1}'>
+   <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
         <style>
             /*todo тут все цвета будут*/
+            .progres{
+                fill: red;
+                fill-opacity: .3;
+            }
+            .area{
+                position: relative;
+                fill: #ffffff;
+                fill-opacity: .3;
+            }
+            .areaBorder{
+                fill: #5dbbff;
+                fill-opacity: .3;
+            }
         </style>
 
         <defs>
             <!--/*todo тут будут все элементы поделенные по ID*/-->
             <g id="polilineChars${settings.SVGindex}">
                 ${charts}
+            </g>
+            <g id="progressBar${settings.SVGindex}">
+                <rect class="progres" width="100%" height="100%" />
+                
+                <symbol id="progressDistrict${settings.SVGindex}" width="100%" height="100%" x="800">
+                    <rect class="area" width="200px" height="100%" />
+                    <rect class="areaBorder" width="10px" height="100%" x="200"/>
+                    <rect class="areaBorder" width="10px" height="100%" x="0"/>
+                </symbol>
+
+                <use xlink:href="#progressDistrict${settings.SVGindex}" width="100%" height="100%"/>
+
             </g>
 
         </defs>
@@ -53,7 +78,8 @@ class Chart {
 
         <symbol id="bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  x="0" y="${settings.hTopChar}"
         viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
-            <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth*2}"/>
+            <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth * 2}"/>
+            <use xlink:href="#progressBar${settings.SVGindex}" />
         </symbol>
 
        <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
