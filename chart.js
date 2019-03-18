@@ -33,7 +33,7 @@ class Chart {
         let charts = Chart.makePolilines(settings);
 
         return ` 
-        <div class="chart">
+        <div class="chart" data-id="${settings.SVGindex}">
    <svg width='${settings.w}' height='${settings.hTopChar*1+settings.hbottomChar*1}'>
         <style>
             /*todo тут все цвета будут*/
@@ -56,8 +56,8 @@ class Chart {
             <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth*2}"/>
         </symbol>
 
-       <use xlink:href="#topChar${settings.SVGindex}"/>
-       <use xlink:href="#bottomChar${settings.SVGindex}"/>
+       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
+       <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
 
     </svg>            
         </div>`;
@@ -178,7 +178,6 @@ const makeChart = (data,index) => {
 data.forEach((item,index) => {
     makeChart(item,index);
 });
-//     makeChart(data[0],0);
 
 
 
