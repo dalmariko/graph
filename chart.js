@@ -53,13 +53,12 @@ class Chart {
             
             .round{
                 stroke-width: 3px;
-                fill: #ffffffff;
+                fill: transparent;
             }
             
         </style>
 
         <defs>
-            <!--/*todo тут будут все элементы поделенные по ID*/-->
             <g id="polilineChars${settings.SVGindex}">
                 ${charts}
             </g>
@@ -80,20 +79,49 @@ class Chart {
                 <use xlink:href="#progresHidden${settings.SVGindex}" width="280" height="100%" x="1000"/>
             </g>
 
+            
         </defs>
 
-        <symbol id="topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}" x="0" y="0" viewBox="1080 0 ${200} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+        <symbol id="topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}" 
+        x="0" y="0" viewBox="1080 0 ${200} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+        
+            
             <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth}"/>
+        
         </symbol>
 
-        <symbol id="bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  x="0" y="${settings.hTopChar}"
-        viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+        <symbol id="bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  
+        x="0" y="${settings.hTopChar}" viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+            
             <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth * 2}"/>
             <use xlink:href="#progressBar${settings.SVGindex}" />
+        
         </symbol>
-            
-                <circle class="round" r="7" stroke="green" cx="345" cy="110" fill="#ffffffff" />
-                <circle class="round" r="7" stroke="red" cx="345" cy="168" fill="#ffffffff" />
+                
+                                
+                <circle class="round" r="7" stroke="green" cx="345" cy="185" fill="#ffffffff" />
+                <circle class="round" r="7" stroke="red" cx="345" cy="282" fill="#ffffffff" />
+
+            <g >
+                <rect x="0" y="0" width="270" height="180" fill="red" rx="15" ry="15"/>
+                <text x="135" y="30" font-family="Verdana" font-size="20" fill="blue" text-anchor="middle" >
+                    SET, FEBR 24
+                </text>
+                
+                <text x="20" y="60" font-family="Verdana" font-size="16" fill="blue" dominant-baseline="central" >
+                    1260
+                    <tspan x="20" y="80">
+                    Joined
+                    </text>
+                </text>
+                
+                <text x="200" y="60" font-family="Verdana" font-size="16" fill="blue" data-z-index="" dominant-baseline="central" >
+                    60
+                    <tspan x="200" y="80">
+                    Left
+                    </tspan>
+                </text>
+            </g>
                 
       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
       <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
@@ -111,9 +139,9 @@ class Chart {
             chartsContainer: '.manyCharts',
             w:'100%',
             wTopChar: '100%',
-            hTopChar: '300',
+            hTopChar: '500',
             wbottomChar: '100%',
-            hbottomChar: '80',
+            hbottomChar: '100',
             fill: 'transparent',
             axis: '',
             types: {"y0": "line", "y1": "line", "x": "x"},
@@ -217,7 +245,7 @@ const makeChart = (data,index) => {
 // data.forEach((item,index) => {
 //     makeChart(item,index);
 // });
-    makeChart(data[0],0);
+makeChart(data[0],0);
 
 
 
@@ -245,5 +273,5 @@ const makeChart = (data,index) => {
 
 
 
- // todo Сделать ползунок на маленьком графике с размером 300px ширины и 100% высоты
- // todo где будет меняться ширина, добавить органы управления, навесить события на него
+// todo Сделать ползунок на маленьком графике с размером 300px ширины и 100% высоты
+// todo где будет меняться ширина, добавить органы управления, навесить события на него
