@@ -1,3 +1,5 @@
+'use strict';
+
 class Chart {
     constructor(settings) {
         this._settings = Object.assign(Chart.getDefaultsettings(), settings);
@@ -51,11 +53,13 @@ class Chart {
                 stroke-width: 21px;
             }
             
-            .round{
-                stroke-width: 3px;
-                fill: transparent;
+          .round{
+              stroke-width: 3;
+          }
+          
+            .map{
+                fill: red;
             }
-            
         </style>
 
         <defs>
@@ -79,7 +83,6 @@ class Chart {
                 <use xlink:href="#progresHidden${settings.SVGindex}" width="280" height="100%" x="1000"/>
             </g>
 
-            
         </defs>
 
         <symbol id="topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}" 
@@ -99,32 +102,41 @@ class Chart {
         </symbol>
                 
                                 
-                <circle class="round" r="7" stroke="green" cx="345" cy="185" fill="#ffffffff" />
-                <circle class="round" r="7" stroke="red" cx="345" cy="282" fill="#ffffffff" />
-
-            <g >
-                <rect x="0" y="0" width="270" height="180" fill="red" rx="15" ry="15"/>
-                <text x="135" y="30" font-family="Verdana" font-size="20" fill="blue" text-anchor="middle" >
+                
+            <g id="infoTable${settings.SVGindex}">
+            
+                <rect class='map' x="0" y="0" width="135" height="80" font-family="Verdana" font-size="14px" rx="10" ry="10"/>
+                
+                <text dx="67.5" dy="20"  fill="blue" font-size="1rem" text-anchor="middle" >
                     SET, FEBR 24
                 </text>
                 
-                <text x="20" y="60" font-family="Verdana" font-size="16" fill="blue" dominant-baseline="central" >
-                    1260
-                    <tspan x="20" y="80">
-                    Joined
-                    </text>
-                </text>
-                
-                <text x="200" y="60" font-family="Verdana" font-size="16" fill="blue" data-z-index="" dominant-baseline="central" >
-                    60
-                    <tspan x="200" y="80">
-                    Left
+                <text dx="10" dy="40" font-size=".9rem"  fill="blue" >
+                   <tspan x="5" y="0">
+                        1352
+                    </tspan>
+                    <tspan x="5" dy="20">
+                        Joined
                     </tspan>
                 </text>
-            </g>
                 
+                <text dx="50" dy="40" font-size=".9rem"  fill="blue">
+                    <tspan x="30" y="0">
+                        60
+                    </tspan>
+                    <tspan x="80" dy="20">
+                        Left
+                    </tspan>
+                </text>
+                                
+            </g>
+            
+      
       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
       <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
+                
+                <circle class="round" r="7" cx="345" cy="185" stroke="green" fill="#000000" />
+                <circle class="round"  r="7" cx="345" cy="282" stroke="red" fill="#000000" />
 
     </svg>            
         </div>`;
@@ -137,7 +149,7 @@ class Chart {
          */
         return {
             chartsContainer: '.manyCharts',
-            w:'100%',
+            w: '100%',
             wTopChar: '100%',
             hTopChar: '500',
             wbottomChar: '100%',
@@ -185,14 +197,14 @@ const getScale = (data) => {
     //     document.documentElement.clientHeight
     // );
 
-    console.log('w =',maxX,' h =',maxY);
+    console.log('w =', maxX, ' h =', maxY);
     return {scaleX: maxX / ctn, scaleY: maxY / ctn};
 };
 const getExtremum = (data) => {
-    return ( (data.slice().filter(Number).sort((a, b) => (a<b) - (a>b) )[0]) / data.length );
+    return ( (data.slice().filter(Number).sort((a, b) => (a < b) - (a > b))[0]) / data.length );
 };
-const round=(number)=>{
-    return  Math.round((number * 100).toFixed(2)) / 100;
+const round = (number) => {
+    return Math.round((number * 100).toFixed(2)) / 100;
 };
 const makePoint = (data, scale, {type = true} = {}) => {
     let rez = [];
@@ -200,13 +212,13 @@ const makePoint = (data, scale, {type = true} = {}) => {
     let ctn = data.length;
 
     while (item !== ctn) {
-        rez[item - 1] =  round(type ? data[item] : item)  * scale   ;
+        rez[item - 1] = round(type ? data[item] : item) * scale;
         item++;
     }
 
     return rez;
 };
-const makeChart = (data,index) => {
+const makeChart = (data, index) => {
     let points = {};
     let scales = getScale(data);
     let scaleX = scales.scaleX;
@@ -245,32 +257,7 @@ const makeChart = (data,index) => {
 // data.forEach((item,index) => {
 //     makeChart(item,index);
 // });
-makeChart(data[0],0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+makeChart(data[0], 0);
 
 
 // todo Сделать ползунок на маленьком графике с размером 300px ширины и 100% высоты
