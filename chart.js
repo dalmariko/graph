@@ -156,22 +156,49 @@ class Chart {
         
         </symbol>
                 
-                                
-        
-            
-
-
-                     
-      <line class="axixLine" x1="0" y1="80" x2="100%" y2="80" /> 
-      <line class="axixLine" x1="0" y1="180" x2="100%" y2="180" /> 
-      <line class="axixLine" x1="0" y1="280" x2="100%" y2="280" /> 
-      <line class="axixLine" x1="0" y1="380" x2="100%" y2="380" /> 
-      <line class="axixLine" x1="0" y1="480" x2="100%" y2="480" /> 
-       
+    
       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
       <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
         
-      <line class="axixLine" x1="345" y1="100" x2="345" y2="480" />
+        
+       <g >
+       <text class="asixDivision"x="0" y="70">250</text>
+       <line class="axixLine" x1="0" y1="75" x2="100%" y2="75" /> 
+       </g>                       
+      
+       <g >
+       <text class="asixDivision"x="0" y="145">200</text>
+       <line class="axixLine" x1="0" y1="150" x2="100%" y2="150" /> 
+       </g>
+       
+       <g >
+       <text class="asixDivision" x="0" y="220">150</text>
+       <line class="axixLine" x1="0" y1="225" x2="100%" y2="225" /> 
+       </g>                       
+      
+       <g >
+       <text class="asixDivision"x="0" y="295">100</text>
+       <line class="axixLine" x1="0" y1="300" x2="100%" y2="300" /> 
+       </g>                       
+      
+       <g >
+       <text class="asixDivision"x="0" y="370">50</text>
+       <line class="axixLine" x1="0" y1="375" x2="100%" y2="375" /> 
+       </g>                       
+      
+       <g >
+       <text class="asixDivision"x="0" y="445">0</text>
+       <line class="axixLine" x1="0" y1="450" x2="100%" y2="450" /> 
+       </g>                       
+      
+      
+     
+      
+      
+      
+      <line class="axixLine" x1="345" y1="100" x2="345" y2="450" />
+      
+      
       
         <foreignObject x="325" y="30" width="135" height="150">
 
