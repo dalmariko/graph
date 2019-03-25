@@ -71,23 +71,28 @@ class Chart {
             border-radius: 8px;
             font-size: 20px;
             padding: 4px 10px;
-            border-color: black;
+            border-color: #212C3A;
             border-style: solid;
             border-width: 1px;
-            box-shadow: 0px 1px 1px black;
+            box-shadow: 0px 1px 1px #253241;
         }
 
         .infoContainer p{
             padding: .1rem;
             margin: .1rem;
         }
-
+        
+        .tableValue{
+           font-size:1.15rem;
+            font-weight:700;
+        }
         .dateDay{
             margin: .1rem auto;
             padding: .1rem;
             background-color: transparent;
             color: #FFFFFF;
-            font-size: .9rem;
+            font-size: 1rem;
+            font-weight:700;
         }
 
         .numbersContainer{
@@ -102,7 +107,8 @@ class Chart {
             justify-content: space-between;
             align-items: flex-start;
             background-color: transparent;
-            font-size: .8rem;
+            font-size: 1rem;
+             font-weight:600;
         }
 
         .leftInfo {
@@ -113,7 +119,43 @@ class Chart {
             color: #F1685F;
         }
 
+        .axixLine{
+            stroke:#293544;
+            stroke-width:1
+        }
+        .asixDivision {
+            fill:#4A5C6C;
+            font-size: .95rem;
+        }
+        .asixToTableLine{
+            stroke:#344252;
+            stroke-width:2
+        }
+            
+       .daysContainer {
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+            justify-content: space-around;
+            font-size: 20px;
+            color: #4A5C6C;
+            margin: 0;
+            padding: 0;
+        }
 
+        .monthandDay {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .monthandDay p {
+            margin: .1rem;
+            padding: .1rem;
+            font-size: .95rem;
+        }
+
+            
             
         </style>
 
@@ -157,10 +199,8 @@ class Chart {
         </symbol>
                 
     
-      <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
-      <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
-        
-        
+    
+           
        <g >
        <text class="asixDivision"x="0" y="70">250</text>
        <line class="axixLine" x1="0" y1="75" x2="100%" y2="75" /> 
@@ -189,24 +229,39 @@ class Chart {
        <g >
        <text class="asixDivision"x="0" y="445">0</text>
        <line class="axixLine" x1="0" y1="450" x2="100%" y2="450" /> 
-       </g>                       
-      
+       </g>             
+                 
+                 
+      <foreignObject x="0" y="460" width="100%" height="180">
+        <div class="daysContainer" xmlns="http://www.w3.org/1999/xhtml">
+            <div class="monthandDay"><p>Feb</p><p>21</p></div>
+            <div class="monthandDay"><p>Feb</p><p>21</p></div>
+            <div class="monthandDay"><p>Feb</p><p>21</p></div>
+            <div class="monthandDay"><p>Feb</p><p>21</p></div>
+            <div class="monthandDay"><p>Feb</p><p>21</p></div>
+        </div>
+     </foreignObject>
       
      
+    
+      <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
+      <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
+        
+ 
       
       
       
-      <line class="axixLine" x1="345" y1="100" x2="345" y2="450" />
+      <line class="axixLine asixToTableLine" x1="345" y1="100" x2="345" y2="450" />
       
       
       
-        <foreignObject x="325" y="30" width="135" height="150">
+        <foreignObject x="325" y="30" width="165" height="180">
 
             <div class="infoContainer" xmlns="http://www.w3.org/1999/xhtml">
                 <div class="dateDay">Sat, Feb 24</div>
                 <div class="numbersContainer">
-                    <div class="leftInfo"><p>142</p><p>Joint</p></div>
-                    <div class="rigthInfo"><p>67</p><p>Left</p></div>
+                    <div class="leftInfo"><p class="tableValue">142</p><p>Joint</p></div>
+                    <div class="rigthInfo"><p class="tableValue">67</p><p>Left</p></div>
                 </div>
             </div>
             
@@ -339,5 +394,5 @@ const makeChart = (data, index) => {
 makeChart(data[0], 0);
 
 
-// todo Сделать ползунок на маленьком графике с размером 300px ширины и 100% высоты
-// todo где будет меняться ширина, добавить органы управления, навесить события на него
+//TODO Сделать метод который будет вычислять значения по оси У кратные 50 и он должен меняться с движением ползунка причем по высоте тоже
+//TODO Сделать метод который будет менять колличество ДНЕЙ в зависимости от движения ползунка
