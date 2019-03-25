@@ -54,6 +54,7 @@ class Chart {
             
           .round{
               stroke-width: 3;
+              fill:#242F3E;
           }
           
             .map{
@@ -70,7 +71,10 @@ class Chart {
             border-radius: 8px;
             font-size: 20px;
             padding: 4px 10px;
-
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            box-shadow: 0px 1px 1px black;
         }
 
         .infoContainer p{
@@ -153,19 +157,23 @@ class Chart {
         </symbol>
                 
                                 
-                
-            <!--<g id="infoTable${settings.SVGindex}">-->
-                                   
-            <!--</g>-->
+        
             
 
 
-             
-      
+                     
+      <line class="axixLine" x1="0" y1="80" x2="100%" y2="80" /> 
+      <line class="axixLine" x1="0" y1="180" x2="100%" y2="180" /> 
+      <line class="axixLine" x1="0" y1="280" x2="100%" y2="280" /> 
+      <line class="axixLine" x1="0" y1="380" x2="100%" y2="380" /> 
+      <line class="axixLine" x1="0" y1="480" x2="100%" y2="480" /> 
+       
       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
       <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
-                  
-        <foreignObject x="325" y="30" width="130" height="150">
+        
+      <line class="axixLine" x1="345" y1="100" x2="345" y2="480" />
+      
+        <foreignObject x="325" y="30" width="135" height="150">
 
             <div class="infoContainer" xmlns="http://www.w3.org/1999/xhtml">
                 <div class="dateDay">Sat, Feb 24</div>
@@ -176,8 +184,10 @@ class Chart {
             </div>
             
         </foreignObject>
-                <circle class="round" r="7" cx="345" cy="185" stroke="green" fill="#000000" />
-                <circle class="round"  r="7" cx="345" cy="282" stroke="red" fill="#000000" />
+        
+         
+                <circle class="round" r="7" cx="345" cy="185" stroke="green"  />
+                <circle class="round"  r="7" cx="345" cy="282" stroke="red" />
              
 
     </svg>            
