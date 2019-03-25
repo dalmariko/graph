@@ -38,9 +38,8 @@ class Chart {
         <div class="chart" data-id="${settings.SVGindex}">
    <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
         <style>
-            /*todo тут все цвета будут*/
-            
-            .progresCovered{
+           
+           .progresCovered{
                 fill: #F5F9FB;
                 fill-opacity: .7;
             }
@@ -61,6 +60,56 @@ class Chart {
                 fill: #253241;
             }
             
+            
+        .infoContainer {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #253241;
+            border-radius: 8px;
+            font-size: 20px;
+            padding: 4px 10px;
+
+        }
+
+        .infoContainer p{
+            padding: .1rem;
+            margin: .1rem;
+        }
+
+        .dateDay{
+            margin: .1rem auto;
+            padding: .1rem;
+            background-color: transparent;
+            color: #FFFFFF;
+            font-size: .9rem;
+        }
+
+        .numbersContainer{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .leftInfo,.rigthInfo {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            background-color: transparent;
+            font-size: .8rem;
+        }
+
+        .leftInfo {
+            color: #76D672;
+        }
+
+        .rigthInfo {
+            color: #F1685F;
+        }
+
+
             
         </style>
 
@@ -106,29 +155,30 @@ class Chart {
                                 
                 
             <!--<g id="infoTable${settings.SVGindex}">-->
-            
-                <!--<rect class='map' x="345" y="50" width="110" height="80"  rx="10" ry="10"/>-->
-                      <foreignObject x="325" y="30" width="130" height="150">
-               
-                      <div class="infoContainer" xmlns="http://www.w3.org/1999/xhtml">
-                         <div class="dateDay">Sat, Feb 24</div>
-                          <div class="numbersContainer">
-                            <div class="leftInfo"><p>142</p><p>Joint</p></div>
-                            <div class="rigthInfo"><p>67</p><p>Left</p></div>
-                        </div>
-                     </div>
-                      
-                      
-                      </foreignObject> 
-                                    
+                                   
             <!--</g>-->
             
+
+
+             
       
       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
       <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
-                
+                  
+        <foreignObject x="325" y="30" width="130" height="150">
+
+            <div class="infoContainer" xmlns="http://www.w3.org/1999/xhtml">
+                <div class="dateDay">Sat, Feb 24</div>
+                <div class="numbersContainer">
+                    <div class="leftInfo"><p>142</p><p>Joint</p></div>
+                    <div class="rigthInfo"><p>67</p><p>Left</p></div>
+                </div>
+            </div>
+            
+        </foreignObject>
                 <circle class="round" r="7" cx="345" cy="185" stroke="green" fill="#000000" />
                 <circle class="round"  r="7" cx="345" cy="282" stroke="red" fill="#000000" />
+             
 
     </svg>            
         </div>`;
