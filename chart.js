@@ -58,8 +58,10 @@ class Chart {
           }
           
             .map{
-                fill: red;
+                fill: #253241;
             }
+            
+            
         </style>
 
         <defs>
@@ -103,33 +105,23 @@ class Chart {
                 
                                 
                 
-            <g id="infoTable${settings.SVGindex}">
+            <!--<g id="infoTable${settings.SVGindex}">-->
             
-                <rect class='map' x="0" y="0" width="135" height="80" font-family="Verdana" font-size="14px" rx="10" ry="10"/>
-                
-                <text dx="67.5" dy="20"  fill="blue" font-size="1rem" text-anchor="middle" >
-                    SET, FEBR 24
-                </text>
-                
-                <text dx="10" dy="40" font-size=".9rem"  fill="blue" >
-                   <tspan x="5" y="0">
-                        1352
-                    </tspan>
-                    <tspan x="5" dy="20">
-                        Joined
-                    </tspan>
-                </text>
-                
-                <text dx="50" dy="40" font-size=".9rem"  fill="blue">
-                    <tspan x="30" y="0">
-                        60
-                    </tspan>
-                    <tspan x="80" dy="20">
-                        Left
-                    </tspan>
-                </text>
-                                
-            </g>
+                <!--<rect class='map' x="345" y="50" width="110" height="80"  rx="10" ry="10"/>-->
+                      <foreignObject x="325" y="30" width="130" height="150">
+               
+                      <div class="infoContainer" xmlns="http://www.w3.org/1999/xhtml">
+                         <div class="dateDay">Sat, Feb 24</div>
+                          <div class="numbersContainer">
+                            <div class="leftInfo"><p>142</p><p>Joint</p></div>
+                            <div class="rigthInfo"><p>67</p><p>Left</p></div>
+                        </div>
+                     </div>
+                      
+                      
+                      </foreignObject> 
+                                    
+            <!--</g>-->
             
       
       <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
