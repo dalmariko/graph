@@ -35,17 +35,16 @@ class Chart {
         let datePoints = '';
 
         for(let i=0;i<settings['x'].length;i++) {
-            let date = new Date(settings['x'][i]);
-            if (i % 2 == 0) {
-                datePoints = `
+            if (i % 2 == 0 && i<=8) {
+                let date = new Date(settings['x'][i]);
+                datePoints += `
                <div class="monthandDay">
                     <p>${date.toLocaleString('en-US', {month: 'short'})},</p>
                     <p>${date.toLocaleString('en-US', {day: 'numeric'})}</p>
                 </div>
             `;
             }
-
-        };
+        }
         return datePoints;
     }
 
