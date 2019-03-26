@@ -31,8 +31,28 @@ class Chart {
         return polilines;
     }
 
+    static makeDataPoints(settings) {
+        let datePoints = '';
+
+        for(let i=0;i<settings['x'].length;i++) {
+            let date = new Date(settings['x'][i]);
+            if (i % 2 == 0) {
+                datePoints = `
+               <div class="monthandDay">
+                    <p>${date.toLocaleString('en-US', {month: 'short'})},</p>
+                    <p>${date.toLocaleString('en-US', {day: 'numeric'})}</p>
+                </div>
+            `;
+            }
+
+        };
+        return datePoints;
+    }
+
     static template(settings) {
         let charts = Chart.makePolilines(settings);
+
+        let datapoints=Chart.makeDataPoints(settings);
 
         return ` 
         <div class="chart" data-id="${settings.SVGindex}">
@@ -234,11 +254,7 @@ class Chart {
                  
       <foreignObject x="0" y="460" width="100%" height="180">
         <div class="daysContainer" xmlns="http://www.w3.org/1999/xhtml">
-            <div class="monthandDay"><p>Feb</p><p>21</p></div>
-            <div class="monthandDay"><p>Feb</p><p>21</p></div>
-            <div class="monthandDay"><p>Feb</p><p>21</p></div>
-            <div class="monthandDay"><p>Feb</p><p>21</p></div>
-            <div class="monthandDay"><p>Feb</p><p>21</p></div>
+            ${datapoints}
         </div>
      </foreignObject>
       
@@ -290,6 +306,8 @@ class Chart {
             hbottomChar: '100',
             fill: 'transparent',
             axis: '',
+            x: '',
+            y: '',
             types: {"y0": "line", "y1": "line", "x": "x"},
             names: {"y0": "#0", "y1": "#1"},
             colors: {
@@ -373,18 +391,23 @@ const makeChart = (data, index) => {
         points[data.columns[a][0]] = str;
         a++;
     }
-    let charParameter = {};
+    let charParameters = {};
+    let xTime=[];
+        data['columns'][0].forEach((i,index)=>index>0?xTime.push(i):'');
+
     for (let props in data) {
         if (props !== 'columns') {
-            charParameter[props] = data[props];
-            charParameter['axis'] = points;
-            charParameter['SVGindex'] = index;
-            charParameter['gprapiks'] = Object.keys(points).length;
-            charParameter['innerWidth'] = window.innerWidth;
-            charParameter['innerHeigth'] = window.innerHeight;
+            charParameters[props] = data[props];
+            charParameters['axis'] = points;
+            charParameters['x'] = xTime;
+            charParameters['y'] = '';
+            charParameters['SVGindex'] = index;
+            charParameters['gprapiks'] = Object.keys(points).length;
+            charParameters['innerWidth'] = window.innerWidth;
+            charParameters['innerHeigth'] = window.innerHeight;
         }
     }
-    return new Chart(charParameter).init();
+    return new Chart(charParameters).init();
 
 };
 
