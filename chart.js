@@ -41,9 +41,10 @@ class Chart {
 
         settings.x.sort((a,b)=>{return b-a});
          let i=settings['x'].length;
-
+        let multiple=2;
+        let maxDataElements=multiple*4;
         while(i+1!==0) {
-            if (i % 2 == 0 && i<=10) {
+            if (i % multiple == 0 && i<=maxDataElements) {
                 let date = new Date(settings['x'][i]);
                 datePoints += `
                <div class="monthandDay">
