@@ -33,9 +33,11 @@ class Chart {
 
     static makeDataPoints(settings) {
         let datePoints = '';
+        settings.x.sort((a,b)=>{return b-a});
+         let i=settings['x'].length;
 
-        for(let i=0;i<settings['x'].length;i++) {
-            if (i % 2 == 0 && i<=8) {
+        while(i!==0) {
+            if (i % 2 == 0 && i<=10) {
                 let date = new Date(settings['x'][i]);
                 datePoints += `
                <div class="monthandDay">
@@ -44,6 +46,7 @@ class Chart {
                 </div>
             `;
             }
+            i--;
         }
         return datePoints;
     }
