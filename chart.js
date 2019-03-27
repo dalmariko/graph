@@ -31,13 +31,30 @@ class Chart {
         return polilines;
     }
 
-    static makeDataPoints(settings) {
+    static makeDataXPoints(settings) {
         let datePoints = '';
 
-        // settings.x.forEach(i=>{
-        //    let date=new Date(i);
-        //    console.log(date.toLocaleString('en-US', {month: 'short'}),date.toLocaleString('en-US', {day: 'numeric'}));
-        // });
+        settings.x.sort((a,b)=>{return b-a});
+         let i=settings['x'].length;
+        let multiple=2;
+        let maxDataElements=multiple*4;
+        while(i+1!==0) {
+            if (i % multiple == 0 && i<=maxDataElements) {
+                let date = new Date(settings['x'][i]);
+                datePoints += `
+               <div class="monthandDay">
+                    <p>${date.toLocaleString('en-US', {month: 'short'})},</p>
+                    <p>${date.toLocaleString('en-US', {day: 'numeric'})}</p>
+                </div>
+            `;
+            }
+           i--;
+        }
+        return datePoints;
+    }
+
+    static makeValueYPoints(settings) {
+        let datePoints = '';
 
         settings.x.sort((a,b)=>{return b-a});
          let i=settings['x'].length;
@@ -61,12 +78,12 @@ class Chart {
     static template(settings) {
         let charts = Chart.makePolilines(settings);
 
-        let datapoints=Chart.makeDataPoints(settings);
+        let datapoints=Chart.makeDataXPoints(settings);
 
         return ` 
         <div class="chart" data-id="${settings.SVGindex}">
-   <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
-        <style>
+           <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
+             <style>
            
            .progresCovered{
                 fill: #F5F9FB;
@@ -188,7 +205,7 @@ class Chart {
             
         </style>
 
-        <defs>
+            <defs>
             <g id="polilineChars${settings.SVGindex}">
                 ${charts}
             </g>
@@ -320,8 +337,8 @@ class Chart {
             types: {"y0": "line", "y1": "line", "x": "x"},
             names: {"y0": "#0", "y1": "#1"},
             colors: {
-                "axisY0": "#cb513a",
-                "axisY1": "#73c03a",
+                "axisY0": "#ED685F",
+                "axisY1": "#76D672",
                 "y2": "#ff35e3",
                 "y3": "#4682b4"
             },
