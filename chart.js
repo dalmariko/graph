@@ -33,10 +33,16 @@ class Chart {
 
     static makeDataPoints(settings) {
         let datePoints = '';
+
+        // settings.x.forEach(i=>{
+        //    let date=new Date(i);
+        //    console.log(date.toLocaleString('en-US', {month: 'short'}),date.toLocaleString('en-US', {day: 'numeric'}));
+        // });
+
         settings.x.sort((a,b)=>{return b-a});
          let i=settings['x'].length;
 
-        while(i!==0) {
+        while(i+1!==0) {
             if (i % 2 == 0 && i<=10) {
                 let date = new Date(settings['x'][i]);
                 datePoints += `
@@ -46,7 +52,7 @@ class Chart {
                 </div>
             `;
             }
-            i--;
+           i--;
         }
         return datePoints;
     }
