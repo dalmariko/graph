@@ -8,6 +8,7 @@ class Chart {
     }
 
     init() {
+        Chart.getIndex(this._indexChar);
         Chart.getScale(this._chart);
         Chart.makeChart(this._chart);
         Chart.makePolilines(this._chart);
@@ -15,12 +16,15 @@ class Chart {
         return this;
     }
 
+    static getIndex(indexChar){
+        return this._indexChar=indexChar;
+    }
 
     static getScale(chart){
         let ctn = chart.columns[0].length;
         let maxX = window.innerWidth;
         let maxY = window.innerHeight;
-        return this._scale={scaleX: maxX / ctn, scaleY: maxY / ctn};
+        return this._scale = {scaleX: maxX / ctn, scaleY: maxY / ctn, maxX: maxX, maxY: maxY};
     }
 
     static getExtremum(chart){
@@ -116,7 +120,6 @@ class Chart {
     }
 
     static template(settings) {
-
 
         // let datapoints=Chart.makeDataXPoints(settings);
 
@@ -246,41 +249,41 @@ class Chart {
         </style>
 
             <defs>
-            <g id="polilineChars${settings.SVGindex}">
+            <g id="polilineChars${this._indexChar}">
                 ${this._polilines}
             </g>
 
-            <g id="progressBar${settings.SVGindex}">
+            <g id="progressBar${this._indexChar}">
                                 
-                <symbol id="progresDistrict${settings.SVGindex}" width="100%" height="100%" >
+                <symbol id="progresDistrict${this._indexChar}" width="100%" height="100%" >
                     <rect class="area" width="100%" height="100%"/>
                 </symbol>
                 
-                <symbol id="progresHidden${settings.SVGindex}" width="100%" height="100%">
+                <symbol id="progresHidden${this._indexChar}" width="100%" height="100%">
                         <rect class="progresCovered" width="100%" height="100%" />
                 </symbol> 
      
                                 
-                <use xlink:href="#progresDistrict${settings.SVGindex}" width="200" height="100%" x="800"/>
-                <use xlink:href="#progresHidden${settings.SVGindex}" width="800" height="100%" x="0"/>
-                <use xlink:href="#progresHidden${settings.SVGindex}" width="280" height="100%" x="1000"/>
+                <use xlink:href="#progresDistrict${this._indexChar}" width="200" height="100%" x="800"/>
+                <use xlink:href="#progresHidden${this._indexChar}" width="800" height="100%" x="0"/>
+                <use xlink:href="#progresHidden${this._indexChar}" width="280" height="100%" x="1000"/>
             </g>
 
         </defs>
 
-        <symbol id="topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}" 
-        x="0" y="0" viewBox="1080 0 ${200} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+        <symbol id="topChar${this._indexChar}" width="${settings.wTopChar}" height="${settings.hTopChar}" 
+        x="0" y="0" viewBox="1080 0 ${200} ${this._scale.maxY}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
         
             
-            <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth}"/>
+            <use xlink:href="#polilineChars${this._indexChar}" stroke-width="${settings.strokeWidth}"/>
         
         </symbol>
 
-        <symbol id="bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  
-        x="0" y="${settings.hTopChar}" viewBox="0 0 ${settings.innerWidth} ${settings.innerHeigth}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+        <symbol id="bottomChar${this._indexChar}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"  
+        x="0" y="${settings.hTopChar}" viewBox="0 0 ${this._scale.maxX} ${this._scale.maxY}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
             
-            <use xlink:href="#polilineChars${settings.SVGindex}" stroke-width="${settings.strokeWidth * 2}"/>
-            <use xlink:href="#progressBar${settings.SVGindex}" />
+            <use xlink:href="#polilineChars${this._indexChar}" stroke-width="${settings.strokeWidth * 2}"/>
+            <use xlink:href="#progressBar${this._indexChar}" />
         
         </symbol>
                 
@@ -326,8 +329,8 @@ class Chart {
       
      
     
-      <use xlink:href="#topChar${settings.SVGindex}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
-      <use xlink:href="#bottomChar${settings.SVGindex}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
+      <use xlink:href="#topChar${this._indexChar}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
+      <use xlink:href="#bottomChar${this._indexChar}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
         
  
       
@@ -388,9 +391,9 @@ class Chart {
 }
 
 
-let item=data[0];
-let index = 0;
+// let item=data[0];
+// let index = 0;
 
-// data.forEach((item,index)=>{
+data.forEach((item,index)=>{
     new Chart(item,index).init();
-// });
+});
