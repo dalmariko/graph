@@ -71,4 +71,4 @@ const data = [{
         "axisY1": "#73c03a", "y2": "#65b9ac", "y3": "#4682b4"
     }
 }];
-console.log(data);
+// console.log(data);

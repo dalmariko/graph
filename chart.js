@@ -1,13 +1,71 @@
 'use strict';
 
 class Chart {
-    constructor(settings) {
-        this._settings = Object.assign(Chart.getDefaultsettings(), settings);
+    constructor(chart,indexChar,settings) {
+        this._chart=chart;
+        this._indexChar=indexChar;
+        this._settings = Object.assign(Chart.getDefaultsettings(),settings);
     }
 
     init() {
+        Chart.getScale(this._chart);
+        Chart.makeChart(this._chart);
+        Chart.makePolilines(this._chart);
         Chart.addTemplate(this._settings);
         return this;
+    }
+
+
+    static getScale(chart){
+        let ctn = chart.columns[0].length;
+        let maxX = window.innerWidth;
+        let maxY = window.innerHeight;
+        return this._scale={scaleX: maxX / ctn, scaleY: maxY / ctn};
+    }
+
+    static getExtremum(chart){
+        return ( (chart.slice().filter(Number).sort((a, b) => (a < b) - (a > b))[0]) / chart.length );
+    }
+
+    static round(number){
+        return Math.round((number * 100).toFixed(2)) / 100;
+    }
+
+    static makePoint(chart, scale, {type = true} = {}){
+        let rez = [];
+        let item = 1;
+        let ctn = chart.length;
+
+        while (item !== ctn) {
+            rez[item - 1] = Chart.round((type ? chart[item] : item) * scale);
+            item++;
+        }
+
+        return rez;
+    }
+
+    static makeChart(chart){
+        this._points = {};
+        let scales = this._scale;
+        let scaleX = scales.scaleX;
+        let x = Chart.makePoint(chart.columns[0], scaleX, {type: false});
+        let ctn = x.length;
+        let a = 1;
+        let actn = chart.columns.length;
+        while (a !== actn) {
+            let scaleY = scales.scaleY / Chart.getExtremum(chart.columns[a]);
+
+            let y = Chart.makePoint(chart.columns[a], scaleY);
+            let str = '';
+            let i = 0;
+            while (i !== ctn) {
+                str += `${x[i]},${y[i]} `;
+                i++;
+            }
+            this._points[chart.columns[a][0]] = str;
+            a++;
+        }
+    return this._points;
     }
 
     static addTemplate(settings) {
@@ -15,20 +73,20 @@ class Chart {
         document.querySelector(settings.chartsContainer).insertAdjacentHTML('beforeend', template);
     }
 
-    static makePolilines(settings) {
-        let polilines = '';
+    static makePolilines(chart) {
+       this._polilines = '';
 
         let color = [];
-        for (let key in settings.colors) {
-            color.push(settings.colors[key]);
+        for (let key in chart.colors) {
+            color.push(chart.colors[key]);
         }
 
-        for (let i = 0; i < settings.gprapiks; i++) {
-            polilines +=
-                `<polyline points="${settings.axis[`y${i}`]}"
-                     style="fill:${settings.fill};stroke:${color[i]};" />`
+        for (let i = 0; i < chart.columns.length-1; i++) {
+            this._polilines +=
+                `<polyline points="${this._points[`y${i}`]}"
+                     style="fill:transparent;stroke:${color[i]};" />`
         }
-        return polilines;
+        return this;
     }
 
     static makeDataXPoints(settings) {
@@ -54,34 +112,16 @@ class Chart {
     }
 
     static makeValueYPoints(settings) {
-        let datePoints = '';
 
-        settings.x.sort((a,b)=>{return b-a});
-         let i=settings['x'].length;
-        let multiple=2;
-        let maxDataElements=multiple*4;
-        while(i+1!==0) {
-            if (i % multiple == 0 && i<=maxDataElements) {
-                let date = new Date(settings['x'][i]);
-                datePoints += `
-               <div class="monthandDay">
-                    <p>${date.toLocaleString('en-US', {month: 'short'})},</p>
-                    <p>${date.toLocaleString('en-US', {day: 'numeric'})}</p>
-                </div>
-            `;
-            }
-           i--;
-        }
-        return datePoints;
     }
 
     static template(settings) {
-        let charts = Chart.makePolilines(settings);
 
-        let datapoints=Chart.makeDataXPoints(settings);
+
+        // let datapoints=Chart.makeDataXPoints(settings);
 
         return ` 
-        <div class="chart" data-id="${settings.SVGindex}">
+        <div class="chart" data-id="${this._indexChar}">
            <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
              <style>
            
@@ -207,7 +247,7 @@ class Chart {
 
             <defs>
             <g id="polilineChars${settings.SVGindex}">
-                ${charts}
+                ${this._polilines}
             </g>
 
             <g id="progressBar${settings.SVGindex}">
@@ -280,7 +320,7 @@ class Chart {
                  
       <foreignObject x="0" y="460" width="100%" height="180">
         <div class="daysContainer" xmlns="http://www.w3.org/1999/xhtml">
-            ${datapoints}
+             
         </div>
      </foreignObject>
       
@@ -330,118 +370,27 @@ class Chart {
             hTopChar: '500',
             wbottomChar: '100%',
             hbottomChar: '100',
-            fill: 'transparent',
-            axis: '',
-            x: '',
-            y: '',
-            types: {"y0": "line", "y1": "line", "x": "x"},
-            names: {"y0": "#0", "y1": "#1"},
-            colors: {
-                "axisY0": "#ED685F",
-                "axisY1": "#76D672",
-                "y2": "#ff35e3",
-                "y3": "#4682b4"
+            types: {
+                y0: "line",
+                y1: "line",
+                x: "x"
             },
+            names: {
+                y0: "#0",
+                y1: "#1"
+            },
+            colors: {
+                axisY0: "#ED685F",
+                axisY1: "#76D672",},
             strokeWidth: 1,
         }
     }
 }
 
-const getScale = (data) => {
 
-    let ctn = data.columns[0].length;
+let item=data[0];
+let index = 0;
 
-    // let maxX = window.innerWidth;
-    // let maxY = window.innerHeight;
-
-    let maxX = window.innerWidth;
-    let maxY = window.innerHeight;
-
-    // let maxX = Math.max(
-    //     document.body.scrollWidth,
-    //     document.documentElement.scrollWidth,
-    //     document.body.offsetWidth,
-    //     document.documentElement.offsetWidth,
-    //     document.body.clientWidth,
-    //     document.documentElement.clientWidth
-    // );
-    //
-    // let maxY = Math.max(
-    //     document.body.scrollHeight,
-    //     document.documentElement.scrollHeight,
-    //     document.body.offsetHeight,
-    //     document.documentElement.offsetHeight,
-    //     document.body.clientHeight,
-    //     document.documentElement.clientHeight
-    // );
-
-    console.log('w =', maxX, ' h =', maxY);
-    return {scaleX: maxX / ctn, scaleY: maxY / ctn};
-};
-const getExtremum = (data) => {
-    return ( (data.slice().filter(Number).sort((a, b) => (a < b) - (a > b))[0]) / data.length );
-};
-const round = (number) => {
-    return Math.round((number * 100).toFixed(2)) / 100;
-};
-const makePoint = (data, scale, {type = true} = {}) => {
-    let rez = [];
-    let item = 1;
-    let ctn = data.length;
-
-    while (item !== ctn) {
-        rez[item - 1] = round(type ? data[item] : item) * scale;
-        item++;
-    }
-
-    return rez;
-};
-const makeChart = (data, index) => {
-    let points = {};
-    let scales = getScale(data);
-    let scaleX = scales.scaleX;
-    let x = makePoint(data.columns[0], scaleX, {type: false});
-    let ctn = x.length;
-    let a = 1;
-    let actn = data.columns.length;
-    while (a !== actn) {
-        let scaleY = scales.scaleY / getExtremum(data.columns[a]);
-
-        let y = makePoint(data.columns[a], scaleY);
-        let str = '';
-        let i = 0;
-        while (i !== ctn) {
-            str += `${x[i]},${y[i]} `;
-            i++;
-        }
-        points[data.columns[a][0]] = str;
-        a++;
-    }
-    let charParameters = {};
-    let xTime=[];
-        data['columns'][0].forEach((i,index)=>index>0?xTime.push(i):'');
-
-    for (let props in data) {
-        if (props !== 'columns') {
-            charParameters[props] = data[props];
-            charParameters['axis'] = points;
-            charParameters['x'] = xTime;
-            charParameters['y'] = '';
-            charParameters['SVGindex'] = index;
-            charParameters['gprapiks'] = Object.keys(points).length;
-            charParameters['innerWidth'] = window.innerWidth;
-            charParameters['innerHeigth'] = window.innerHeight;
-        }
-    }
-    return new Chart(charParameters).init();
-
-};
-
-// data.forEach((item,index) => {
-//     makeChart(item,index);
+// data.forEach((item,index)=>{
+    new Chart(item,index).init();
 // });
-makeChart(data[0], 0);
-
-
-//TODO Сделать метод который будет вычислять значения по оси У кратные 50 и он должен меняться с движением ползунка причем по высоте тоже
-//TODO Сделать метод который будет менять колличество ДНЕЙ в зависимости от движения ползунка
