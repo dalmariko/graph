@@ -7,10 +7,12 @@ class Chart {
 
     init() {
         Chart.getX(this._settings.columns[0]);
+        Chart.getY(this._settings.columns);
         Chart.getScale(this._settings.columns[0]);
         Chart.makeChart(this._settings);
         Chart.makePolilines(this._settings);
         Chart.makeDataXPoints();
+        Chart.makeDataYPoints();
         Chart.addTemplate(this._settings);
         return this;
     }
@@ -41,9 +43,15 @@ class Chart {
 
 
     static getX(chart){
-        this._xPoints=[];
-        chart.forEach((i,index)=>{index>0?this._xPoints.push(i):''});
-        return this._xPoints;
+        return this._xPoints=chart.filter(Number).slice();
+    }
+
+    static getY(chart){
+        this._yPoints=[];
+        chart.forEach((i,index)=>{
+            index>0?this._yPoints[index-1]=i.slice():'';
+        });
+        return this._yPoints;
     }
 
     static getScale(chart){
@@ -63,7 +71,6 @@ class Chart {
         let actn = chart.columns.length;
         while (a !== actn) {
             let scaleY = this._scale.scaleY / Chart.getExtremum(chart.columns[a]);
-
             let y = Chart.makePoint(chart.columns[a], scaleY);
             let str = '';
             let i = 0;
@@ -95,13 +102,16 @@ class Chart {
 
     static makeDataXPoints() {
         this._datePoints = '';
-        this._xPoints.sort((a,b)=>{return b-a});
-         let i=this._xPoints.length;
+
+        let xpoints=this._xPoints.slice().sort((a,b)=>{return b-a});
+
+        let i=xpoints.length;
         let multiple=2;
         let maxDataElements=multiple*4;
+
         while(i+1!==0) {
             if (i % multiple == 0 && i<=maxDataElements) {
-                let date = new Date(this._xPoints[i]);
+                let date = new Date(xpoints[i]);
                 this._datePoints += `
                <div class="monthandDay">
                     <p>${date.toLocaleString('en-US', {month: 'short'})},</p>
@@ -111,10 +121,21 @@ class Chart {
             }
            i--;
         }
+
         return this._datePoints;
     }
 
-
+    static makeDataYPoints(){
+        // let yAxisData={};
+        // for(let y in this._yPoints){
+        //     yAxisData[y]=this._yPoints[y].slice().sort((a,b)=>{return b-a})[0];
+        // }
+        // console.log(yAxisData);
+        //
+        // let max = Math.max.apply(null,Object.values(yAxisData));
+        // console.log(max);
+        console.log(this._yPoints);
+    }
 
     static template(chartSettings) {
 
@@ -206,7 +227,6 @@ class Chart {
     <use xlink:href="#topChar${chartSettings.indexChat}" width="${chartSettings.wTopChar}" height="${chartSettings.hTopChar}"/>
     <use xlink:href="#bottomChar${chartSettings.indexChat}" width="${chartSettings.wbottomChar}" height="${chartSettings.hbottomChar}"/>
 
-
     <line class="axixLine asixToTableLine" x1="345" y1="100" x2="345" y2="450" />
 
     <foreignObject x="325" y="30" width="165" height="180">
@@ -260,13 +280,13 @@ class Chart {
 }
 
 
-// let item=data[0];
-// let indexChat = 0;
+let item=data[0];
+let indexChat = 0;
 
-console.time("walkIn");
+// console.time("walkIn");
 
-data.forEach((item,indexChat)=>{
+// data.forEach((item,indexChat)=>{
     new Chart(item,indexChat).init();
-});
+// });
 
-console.timeEnd("walkIn");
+// console.timeEnd("walkIn");
