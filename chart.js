@@ -1,47 +1,32 @@
 'use strict';
 
 class Chart {
-    constructor(chart,indexChar,settings) {
-        this._chart=chart;
-        this._indexChar=indexChar;
-        this._settings = Object.assign(Chart.getDefaultsettings(),settings);
+    constructor(chart, settings) {
+        this._settings = Object.assign(Chart.getDefaultsettings(),chart,settings);
+        // console.log(this._settings);
     }
 
     init() {
-        Chart.getIndex(this._indexChar);
-        Chart.getScale(this._chart);
-        Chart.makeChart(this._chart);
-        Chart.makePolilines(this._chart);
-        Chart.getX(this._chart.columns[0]);
+        Chart.getX(this._settings.columns[0]);
+        // Chart.getY(this._settings.columns);
+        Chart.getScale(this._settings.columns[0]);
+        Chart.makeChart(this._settings);
+        Chart.makePolilines(this._settings);
         Chart.makeDataXPoints();
         Chart.addTemplate(this._settings);
         return this;
     }
-
-    static getIndex(indexChar){
-        return this._indexChar=indexChar;
-    }
-    static getX(chart){
-        this._xPoints=[];
-        chart.forEach((i,index)=>{index>0?this._xPoints.push(i):''});
-        return this._xPoints;
-    }
-
-    static getScale(chart){
-        let ctn = chart.columns[0].length;
-        let maxX = window.innerWidth;
-        let maxY = window.innerHeight;
-        return this._scale = {scaleX: maxX / ctn, scaleY: maxY / ctn, maxX: maxX, maxY: maxY};
+    static addTemplate(settings) {
+        let template = Chart.template(settings);
+        document.querySelector(settings.chartsContainer).insertAdjacentHTML('beforeend', template);
     }
 
     static getExtremum(chart){
         return ( (chart.slice().filter(Number).sort((a, b) => (a < b) - (a > b))[0]) / chart.length );
     }
-
     static round(number){
         return Math.round((number * 100).toFixed(2)) / 100;
     }
-
     static makePoint(chart, scale, {type = true} = {}){
         let rez = [];
         let item = 1;
@@ -55,16 +40,35 @@ class Chart {
         return rez;
     }
 
+
+
+    static getX(chart){
+        this._xPoints=[];
+        chart.forEach((i,index)=>{index>0?this._xPoints.push(i):''});
+        return this._xPoints;
+    }
+
+    static getY(chart){
+
+    }
+
+    static getScale(chart){
+        let ctn = chart.length;
+        let maxX = window.innerWidth;
+        let maxY = window.innerHeight;
+        return  this._scale = {scaleX: maxX / ctn, scaleY: maxY / ctn, maxX: maxX, maxY: maxY};
+    }
+
+
     static makeChart(chart){
         this._points = {};
-        let scales = this._scale;
-        let scaleX = scales.scaleX;
+        let scaleX = this._scale.scaleX;
         let x = Chart.makePoint(chart.columns[0], scaleX, {type: false});
         let ctn = x.length;
         let a = 1;
         let actn = chart.columns.length;
         while (a !== actn) {
-            let scaleY = scales.scaleY / Chart.getExtremum(chart.columns[a]);
+            let scaleY = this._scale.scaleY / Chart.getExtremum(chart.columns[a]);
 
             let y = Chart.makePoint(chart.columns[a], scaleY);
             let str = '';
@@ -77,11 +81,6 @@ class Chart {
             a++;
         }
     return this._points;
-    }
-
-    static addTemplate(settings) {
-        let template = Chart.template(settings);
-        document.querySelector(settings.chartsContainer).insertAdjacentHTML('beforeend', template);
     }
 
     static makePolilines(chart) {
@@ -97,7 +96,7 @@ class Chart {
                 `<polyline points="${this._points[`y${i}`]}"
                      style="fill:transparent;stroke:${color[i]};" />`
         }
-        return this;
+        return this._polilines;
     }
 
     static makeDataXPoints() {
@@ -130,166 +129,51 @@ class Chart {
         // let datapoints=Chart.makeDataXPoints(settings);
 
         return ` 
-        <div class="chart" data-id="${this._indexChar}">
+        <div class="chart" data-id="${settings.indexChat}">
          <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
     <style>
 
-        .progresCovered{
-            fill: #F5F9FB;
-            fill-opacity: .7;
-        }
-        .area{
-            fill: transparent;
-            fill-opacity: .3;
-
-            stroke: #5dbbff;
-            stroke-opacity: .5;
-            stroke-width: 21px;
-        }
-
-        .round{
-            stroke-width: 3;
-            fill:#242F3E;
-        }
-
-        .map{
-            fill: #253241;
-        }
-
-
-        .infoContainer {
-            width: 80%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background-color: #253241;
-            border-radius: 8px;
-            font-size: 20px;
-            padding: 4px 10px;
-            border-color: #212C3A;
-            border-style: solid;
-            border-width: 1px;
-            box-shadow: 0px 1px 1px #253241;
-        }
-
-        .infoContainer p{
-            padding: .1rem;
-            margin: .1rem;
-        }
-
-        .tableValue{
-            font-size:1.15rem;
-            font-weight:700;
-        }
-        .dateDay{
-            margin: .1rem auto;
-            padding: .1rem;
-            background-color: transparent;
-            color: #FFFFFF;
-            font-size: 1rem;
-            font-weight:700;
-        }
-
-        .numbersContainer{
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-        }
-
-        .leftInfo,.rigthInfo {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            background-color: transparent;
-            font-size: 1rem;
-            font-weight:600;
-        }
-
-        .leftInfo {
-            color: #76D672;
-        }
-
-        .rigthInfo {
-            color: #F1685F;
-        }
-
-        .axixLine{
-            stroke:#293544;
-            stroke-width:1
-        }
-        .asixDivision {
-            fill:#4A5C6C;
-            font-size: .95rem;
-        }
-        .asixToTableLine{
-            stroke:#344252;
-            stroke-width:2
-        }
-
-        .daysContainer {
-            display: flex;
-            width: 100%;
-            flex-direction: row;
-            justify-content: space-around;
-            font-size: 20px;
-            color: #4A5C6C;
-            margin: 0;
-            padding: 0;
-        }
-
-        .monthandDay {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-        }
-
-        .monthandDay p {
-            margin: .1rem;
-            padding: .1rem;
-            font-size: .95rem;
-        }
-
+      
 
 
     </style>
 
     <defs>
-        <g id="polilineChars${this._indexChar}">
+        <g id="polilineChars${settings.indexChat}">
             ${this._polilines}
         </g>
 
-        <g id="progressBar${this._indexChar}">
+        <g id="progressBar${settings.indexChat}">
 
-            <symbol id="progresDistrict${this._indexChar}" width="100%" height="100%" >
+            <symbol id="progresDistrict${settings.indexChat}" width="100%" height="100%" >
                 <rect class="area" width="100%" height="100%"/>
             </symbol>
 
-            <symbol id="progresHidden${this._indexChar}" width="100%" height="100%">
+            <symbol id="progresHidden${settings.indexChat}" width="100%" height="100%">
                 <rect class="progresCovered" width="100%" height="100%" />
             </symbol>
 
 
-            <use xlink:href="#progresDistrict${this._indexChar}" width="200" height="100%" x="800"/>
-            <use xlink:href="#progresHidden${this._indexChar}" width="800" height="100%" x="0"/>
-            <use xlink:href="#progresHidden${this._indexChar}" width="280" height="100%" x="1000"/>
+            <use xlink:href="#progresDistrict${settings.indexChat}" width="200" height="100%" x="800"/>
+            <use xlink:href="#progresHidden${settings.indexChat}" width="800" height="100%" x="0"/>
+            <use xlink:href="#progresHidden${settings.indexChat}" width="280" height="100%" x="1000"/>
         </g>
 
     </defs>
 
-    <symbol id="topChar${this._indexChar}" width="${settings.wTopChar}" height="${settings.hTopChar}"
+    <symbol id="topChar${settings.indexChat}" width="${settings.wTopChar}" height="${settings.hTopChar}"
             x="0" y="0" viewBox="1080 0 ${200} ${this._scale.maxY}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
 
 
-        <use xlink:href="#polilineChars${this._indexChar}" stroke-width="${settings.strokeWidth}"/>
+        <use xlink:href="#polilineChars${settings.indexChat}" stroke-width="${settings.strokeWidth}"/>
 
     </symbol>
 
-    <symbol id="bottomChar${this._indexChar}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"
+    <symbol id="bottomChar${settings.indexChat}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"
             x="0" y="${settings.hTopChar}" viewBox="0 0 ${this._scale.maxX} ${this._scale.maxY}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
 
-        <use xlink:href="#polilineChars${this._indexChar}" stroke-width="${settings.strokeWidth * 2}"/>
-        <use xlink:href="#progressBar${this._indexChar}" />
+        <use xlink:href="#polilineChars${settings.indexChat}" stroke-width="${settings.strokeWidth * 2}"/>
+        <use xlink:href="#progressBar${settings.indexChat}" />
 
     </symbol>
 
@@ -333,18 +217,11 @@ class Chart {
         </div>
     </foreignObject>
 
-
-
-    <use xlink:href="#topChar${this._indexChar}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
-    <use xlink:href="#bottomChar${this._indexChar}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
-
-
-
+    <use xlink:href="#topChar${settings.indexChat}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
+    <use xlink:href="#bottomChar${settings.indexChat}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
 
 
     <line class="axixLine asixToTableLine" x1="345" y1="100" x2="345" y2="450" />
-
-
 
     <foreignObject x="325" y="30" width="165" height="180">
 
@@ -357,7 +234,6 @@ class Chart {
         </div>
 
     </foreignObject>
-
 
     <circle class="round" r="7" cx="345" cy="185" stroke="green"  />
     <circle class="round"  r="7" cx="345" cy="282" stroke="red" />
@@ -392,14 +268,19 @@ class Chart {
                 axisY0: "#ED685F",
                 axisY1: "#76D672",},
             strokeWidth: 1,
+            indexChat:0,
         }
     }
 }
 
 
 // let item=data[0];
-// let index = 0;
+// let indexChat = 0;
 
-data.forEach((item,index)=>{
-    new Chart(item,index).init();
+console.time("walkIn");
+
+data.forEach((item,indexChat)=>{
+    new Chart(item,{indexChat}).init();
 });
+
+console.timeEnd("walkIn");
