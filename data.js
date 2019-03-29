@@ -71,4 +71,17 @@ const data = [{
         "axisY1": "#73c03a", "y2": "#65b9ac", "y3": "#4682b4"
     }
 }];
+
+// let myBigData = [];
+// let x = 0;
+// while (x < 100) {
+//     data.forEach(i => {
+//         myBigData.push(i);
+//     });
+//     x++;
+// }
+
+
+// console.log(myBigData.length);
+
 // console.log(data[0]);

@@ -1,14 +1,12 @@
 'use strict';
 
 class Chart {
-    constructor(chart, settings) {
-        this._settings = Object.assign(Chart.getDefaultsettings(),chart,settings);
-        // console.log(this._settings);
+    constructor(chart,indexChat,settings) {
+        this._settings = Object.assign(Chart.getDefaultsettings(),chart,indexChat,settings);
     }
 
     init() {
         Chart.getX(this._settings.columns[0]);
-        // Chart.getY(this._settings.columns);
         Chart.getScale(this._settings.columns[0]);
         Chart.makeChart(this._settings);
         Chart.makePolilines(this._settings);
@@ -46,10 +44,6 @@ class Chart {
         this._xPoints=[];
         chart.forEach((i,index)=>{index>0?this._xPoints.push(i):''});
         return this._xPoints;
-    }
-
-    static getY(chart){
-
     }
 
     static getScale(chart){
@@ -120,60 +114,52 @@ class Chart {
         return this._datePoints;
     }
 
-    static makeValueYPoints(settings) {
 
-    }
 
-    static template(settings) {
-
-        // let datapoints=Chart.makeDataXPoints(settings);
+    static template(chartSettings) {
 
         return ` 
-        <div class="chart" data-id="${settings.indexChat}">
-         <svg width='${settings.w}' height='${settings.hTopChar * 1 + settings.hbottomChar * 1}'>
-    <style>
-
-      
-
-
-    </style>
+        <div class="chart" data-id="${chartSettings.indexChat}">
+         <svg width='${chartSettings.w}' height='${chartSettings.hTopChar * 1 + chartSettings.hbottomChar * 1}'>
+    
+    <style></style>
 
     <defs>
-        <g id="polilineChars${settings.indexChat}">
+        <g id="polilineChars${chartSettings.indexChat}">
             ${this._polilines}
         </g>
 
-        <g id="progressBar${settings.indexChat}">
+        <g id="progressBar${chartSettings.indexChat}">
 
-            <symbol id="progresDistrict${settings.indexChat}" width="100%" height="100%" >
+            <symbol id="progresDistrict${chartSettings.indexChat}" width="100%" height="100%" >
                 <rect class="area" width="100%" height="100%"/>
             </symbol>
 
-            <symbol id="progresHidden${settings.indexChat}" width="100%" height="100%">
+            <symbol id="progresHidden${chartSettings.indexChat}" width="100%" height="100%">
                 <rect class="progresCovered" width="100%" height="100%" />
             </symbol>
 
 
-            <use xlink:href="#progresDistrict${settings.indexChat}" width="200" height="100%" x="800"/>
-            <use xlink:href="#progresHidden${settings.indexChat}" width="800" height="100%" x="0"/>
-            <use xlink:href="#progresHidden${settings.indexChat}" width="280" height="100%" x="1000"/>
+            <use xlink:href="#progresDistrict${chartSettings.indexChat}" width="200" height="100%" x="800"/>
+            <use xlink:href="#progresHidden${chartSettings.indexChat}" width="800" height="100%" x="0"/>
+            <use xlink:href="#progresHidden${chartSettings.indexChat}" width="280" height="100%" x="1000"/>
         </g>
 
     </defs>
 
-    <symbol id="topChar${settings.indexChat}" width="${settings.wTopChar}" height="${settings.hTopChar}"
+    <symbol id="topChar${chartSettings.indexChat}" width="${chartSettings.wTopChar}" height="${chartSettings.hTopChar}"
             x="0" y="0" viewBox="1080 0 ${200} ${this._scale.maxY}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
 
 
-        <use xlink:href="#polilineChars${settings.indexChat}" stroke-width="${settings.strokeWidth}"/>
+        <use xlink:href="#polilineChars${chartSettings.indexChat}" stroke-width="${chartSettings.strokeWidth}"/>
 
     </symbol>
 
-    <symbol id="bottomChar${settings.indexChat}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"
-            x="0" y="${settings.hTopChar}" viewBox="0 0 ${this._scale.maxX} ${this._scale.maxY}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
+    <symbol id="bottomChar${chartSettings.indexChat}" width="${chartSettings.wbottomChar}" height="${chartSettings.hbottomChar}"
+            x="0" y="${chartSettings.hTopChar}" viewBox="0 0 ${this._scale.maxX} ${this._scale.maxY}" preserveAspectRatio="none" vector-effect="non-scaling-stroke">
 
-        <use xlink:href="#polilineChars${settings.indexChat}" stroke-width="${settings.strokeWidth * 2}"/>
-        <use xlink:href="#progressBar${settings.indexChat}" />
+        <use xlink:href="#polilineChars${chartSettings.indexChat}" stroke-width="${chartSettings.strokeWidth * 2}"/>
+        <use xlink:href="#progressBar${chartSettings.indexChat}" />
 
     </symbol>
 
@@ -217,8 +203,8 @@ class Chart {
         </div>
     </foreignObject>
 
-    <use xlink:href="#topChar${settings.indexChat}" width="${settings.wTopChar}" height="${settings.hTopChar}"/>
-    <use xlink:href="#bottomChar${settings.indexChat}" width="${settings.wbottomChar}" height="${settings.hbottomChar}"/>
+    <use xlink:href="#topChar${chartSettings.indexChat}" width="${chartSettings.wTopChar}" height="${chartSettings.hTopChar}"/>
+    <use xlink:href="#bottomChar${chartSettings.indexChat}" width="${chartSettings.wbottomChar}" height="${chartSettings.hbottomChar}"/>
 
 
     <line class="axixLine asixToTableLine" x1="345" y1="100" x2="345" y2="450" />
@@ -268,7 +254,7 @@ class Chart {
                 axisY0: "#ED685F",
                 axisY1: "#76D672",},
             strokeWidth: 1,
-            indexChat:0,
+            indexChat:100,
         }
     }
 }
@@ -280,7 +266,7 @@ class Chart {
 console.time("walkIn");
 
 data.forEach((item,indexChat)=>{
-    new Chart(item,{indexChat}).init();
+    new Chart(item,indexChat).init();
 });
 
 console.timeEnd("walkIn");
